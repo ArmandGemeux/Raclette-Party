@@ -816,6 +816,7 @@ MonoBehaviour:
   intensityMultiplier: 0
   hasCheese: 0
   maxScoreReached: 0
+  perfectScoreSavingTime: 15
   currentScore: 0
   startingScore: 0
   minimumScore: -500
@@ -1449,6 +1450,7 @@ MonoBehaviour:
   intensityMultiplier: 0
   hasCheese: 0
   maxScoreReached: 0
+  perfectScoreSavingTime: 15
   currentScore: 0
   startingScore: 0
   minimumScore: 0
@@ -1581,6 +1583,7 @@ MonoBehaviour:
   intensityMultiplier: 0
   hasCheese: 0
   maxScoreReached: 0
+  perfectScoreSavingTime: 15
   currentScore: 0
   startingScore: 0
   minimumScore: 0

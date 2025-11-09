@@ -1,4 +1,6 @@
 using UnityEngine;
+using DG.Tweening;
+using System.Threading.Tasks;
 
 public class Poelon : MonoBehaviour, IInteractable
 {
@@ -8,6 +10,8 @@ public class Poelon : MonoBehaviour, IInteractable
     public float intensityMultiplier;
     public bool hasCheese = false;
     public bool maxScoreReached = false;
+
+    public float perfectScoreSavingTime = 15f;
 
     [Header("Cheese Values")]
 
@@ -21,21 +25,27 @@ public class Poelon : MonoBehaviour, IInteractable
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (hasCheese == true && maxScoreReached == false)
+        if (currentScore >= maximumScore)
         {
-            currentScore += (int)Mathf.Lerp(startingScore, maximumScore, intensity * intensityMultiplier);
+            maxScoreReached = true;
+        }
+
+        /*if (hasCheese == true && maxScoreReached == false)
+        {
+            //currentScore += (int)Mathf.Lerp(startingScore, maximumScore, intensity * intensityMultiplier);
+            //DOTween.To(currentScore, currentScore, maximumScore, 15);
         }
 
         if (hasCheese == true && currentScore >= maximumScore)
             maxScoreReached = true;
 
-        if (hasCheese && maxScoreReached == true)
+        /*if (hasCheese && maxScoreReached == true)
         {
             currentScore -= (int)Mathf.Lerp(currentScore, minimumScore, intensity * intensityMultiplier);
         }
@@ -45,10 +55,15 @@ public class Poelon : MonoBehaviour, IInteractable
         Le changement de lerp se fait grâce à un changement d'état ("Cuit = true")*/
     }
 
-    public void OnInteract()
+    public async void OnInteract()
     {
         Debug.Log("Oh oh, je suis un poélon coquinou ! :) ");
-        hasCheese = true;
+
+        if (maxScoreReached == false)
+        CheeseBaking();
+
+
+        //DOTween.To(() => currentScore, x => currentScore = x, maximumScore, 10);
 
         /*Rapproche le poelon pour en examiner le contenu
         fait apparaître l'interface du fromage en cours de cuisson : Jauge de cuisson avec des crans dedans pour indiquer les états, et le score associé
@@ -56,5 +71,22 @@ public class Poelon : MonoBehaviour, IInteractable
         Un bouton sous le poélon -> Assiette
         Provoque un dézoom, on doit ensuite cliquer sur le spot désiré dans l'assiette (état selection du spot, on ne peut cliquer que sur ça).
         Quand clic fait, on instancie le fromage dans le spot, on le retire du poélon, il retourne dans l'appareil*/
+    }
+
+    private void CheeseBaking()
+    {
+        hasCheese = true;
+        DOTween.To(() => currentScore, x => currentScore = x, maximumScore, 10 / intensity);
+        //Quand le score max est atteint, lance un chrono de perfectScoreSavingTime. Quand celui-ci est complet, lance CheeseBurning();
+    }
+
+    async Task CheeseBurning()
+    {
+        DOTween.To(() => currentScore, x => currentScore = x, minimumScore, 10/intensity);
+    }
+
+    private void PerfectCheeseSavingDelay()
+    {
+        //Chrono de perfectScoreSavingTime durée, qui une fois à zéro, lance CheeseBurning();
     }
 }
