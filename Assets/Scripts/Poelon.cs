@@ -1,6 +1,8 @@
 using UnityEngine;
 using DG.Tweening;
 using System.Threading.Tasks;
+using TMPro;
+using UnityEngine.UI;
 
 public class Poelon : MonoBehaviour, IInteractable
 {
@@ -21,6 +23,17 @@ public class Poelon : MonoBehaviour, IInteractable
     [Space]
     public int minimumScore;
     public int maximumScore;
+
+    [Header("UI & Feedback")]
+    public UIManager UIManager;
+    public Camera mainCamera;
+
+    public Canvas cheeseButtonsCanvas;
+
+    public Button addCheeseButton;
+    public Button sendToPlateButton;
+    [Space]
+    public Button returnButton;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -57,10 +70,22 @@ public class Poelon : MonoBehaviour, IInteractable
 
     public async void OnInteract()
     {
-        Debug.Log("Oh oh, je suis un poélon coquinou ! :) ");
+        //Debug.Log("Oh oh, je suis un poélon coquinou ! :) ");
 
-        if (maxScoreReached == false)
-        CheeseBaking();
+        //if (maxScoreReached == false)
+        //CheeseBaking();
+
+        //Feedbacks à déplacer dans un Feedback Manager (récupérer position du poélon) ?
+        UIManager.SlideInButtons();
+        transform.DOMove(new Vector3(1.02f, 0.45f, 0f), 0.5f);
+
+        Sequence seq = DOTween.Sequence();
+        seq.Append(mainCamera.transform.DOMove(new Vector3(1.4f, 1f, -0.12f), 0.5f))
+            .Join(mainCamera.transform.DORotate(new Vector3(55f, -90f, 0f), 0.5f));
+        //Draw UI here
+
+
+        //Feedback doit fonctionner comme : récupère référence de l'interact object (via raycast) et possède des références à tout (camera, UI, etc). C'est lui qui envoie les animations à droite à gauche, et qui gère l'ensemble des feedbacks.
 
 
         //DOTween.To(() => currentScore, x => currentScore = x, maximumScore, 10);
@@ -73,11 +98,25 @@ public class Poelon : MonoBehaviour, IInteractable
         Quand clic fait, on instancie le fromage dans le spot, on le retire du poélon, il retourne dans l'appareil*/
     }
 
-    private void CheeseBaking()
+    public void CheeseBaking()
     {
-        hasCheese = true;
-        DOTween.To(() => currentScore, x => currentScore = x, maximumScore, 10 / intensity);
-        //Quand le score max est atteint, lance un chrono de perfectScoreSavingTime. Quand celui-ci est complet, lance CheeseBurning();
+        if (maxScoreReached == false && hasCheese == false)
+        {
+            hasCheese = true;
+            DOTween.To(() => currentScore, x => currentScore = x, maximumScore, 10 / intensity);
+            //Quand le score max est atteint, lance un chrono de perfectScoreSavingTime. Quand celui-ci est complet, lance CheeseBurning();
+        }
+        else
+        {
+            Debug.Log("Y'a déjà du fromage gros gourmand");
+            return;
+        }
+    }
+
+    public void SendToPlate()
+    {
+        GameManager.Instance.InstantiateCheesePrefab();
+        Debug.Log("Fromage dans l'assiette !");
     }
 
     async Task CheeseBurning()
