@@ -6,27 +6,24 @@ using UnityEngine.UI;
 
 public class Poelon : MonoBehaviour, IInteractable
 {
-    //Singleton mais pas ouf si on veut en gérer plusieurs après :(
-    public static Poelon Instance { get; private set; }
+    [Header("Cooking Timings")]
+    public float cookingTime = 10f;
+    public float burningTime = 10f;
+    [Space]
+    public float perfectScoreSavingTime = 15f;
 
 
-    [Range(0, 10)]
-    public int intensity;
-    [Range(0, 1f)]
-    public float intensityMultiplier;
+    [Header("State checkers")]
     public bool hasCheese = false;
     public bool maxScoreReached = false;
 
-    public float perfectScoreSavingTime = 15f;
-
     [Header("Cheese Values")]
-
-    public int currentScore;
+    public int cheeseCurrentScore;
     [Space]
-    public int startingScore;
+    public int cheeseStartingScore;
     [Space]
-    public int minimumScore;
-    public int maximumScore;
+    public int cheeseMinimumScore;
+    public int cheeseMaximumScore;
 
     private Vector3 initialPos;
 
@@ -40,18 +37,6 @@ public class Poelon : MonoBehaviour, IInteractable
     public Button sendToPlateButton;
     [Space]
     public Button returnButton;*/
-    void Awake()
-    {
-        // Vérifie qu’il n’y a qu’un seul GameManager
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-        DontDestroyOnLoad(gameObject); // persiste entre les scènes
-    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -62,12 +47,12 @@ public class Poelon : MonoBehaviour, IInteractable
     // Update is called once per frame
     void Update()
     {
-        if (currentScore >= maximumScore)
+        if (cheeseCurrentScore >= cheeseMaximumScore)
         {
             maxScoreReached = true;
         }
 
-        UIManager.Instance.currentCheeseScore.text = currentScore.ToString();
+        UIManager.Instance.currentCheeseScore.text = cheeseCurrentScore.ToString();
 
         /*if (hasCheese == true && maxScoreReached == false)
         {
@@ -128,7 +113,7 @@ public class Poelon : MonoBehaviour, IInteractable
         if (maxScoreReached == false && hasCheese == false)
         {
             hasCheese = true;
-            DOTween.To(() => currentScore, x => currentScore = x, maximumScore, 10 / intensity).SetId("currentScoreIncrease"); ;
+            DOTween.To(() => cheeseCurrentScore, x => cheeseCurrentScore = x, cheeseMaximumScore, cookingTime).SetId("currentScoreIncrease"); ;
 
             //ajouter un délai léger ici, pour que les boutons se désactivent hors champ
             UIManager.Instance.cheeseInterface[0].gameObject.SetActive(false);
@@ -155,7 +140,7 @@ public class Poelon : MonoBehaviour, IInteractable
 
         GameManager.Instance.lookingForSpot = true;
 
-        GameManager.Instance.GetCheeseData(currentScore);
+        GameManager.Instance.GetCheeseData(cheeseCurrentScore);
 
         FeedbackManager.Instance.MoveCameraToPlate();
         UIManager.Instance.SlideOutCheeseButtons();
@@ -173,16 +158,17 @@ public class Poelon : MonoBehaviour, IInteractable
         DOTween.Restart("currentScoreIncrease");
         DOTween.Kill("currentScoreIncrease");
 
-        currentScore = 0;
+        cheeseCurrentScore = 0;
     }
 
     async Task CheeseBurning()
     {
-        DOTween.To(() => currentScore, x => currentScore = x, minimumScore, 10/intensity);
+        DOTween.To(() => cheeseCurrentScore, x => cheeseCurrentScore = x, cheeseMinimumScore, burningTime);
     }
 
     private void PerfectCheeseSavingDelay()
     {
+        //DOTween.To(() => 0f, x => 
         //Chrono de perfectScoreSavingTime durée, qui une fois à zéro, lance CheeseBurning();
     }
 }

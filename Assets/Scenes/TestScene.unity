@@ -163,7 +163,7 @@ GameObject:
   - component: {fileID: 21545516}
   - component: {fileID: 21545515}
   m_Layer: 0
-  m_Name: RacletteMachine_Bottom
+  m_Name: Grill_Bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -182,7 +182,7 @@ Transform:
   m_LocalScale: {x: 1, y: 0.25, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 750037035}
+  m_Father: {fileID: 89718757}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &21545515
 BoxCollider:
@@ -201,7 +201,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -554,7 +554,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 623305654}
-  - {fileID: 750037035}
+  - {fileID: 481548471}
+  - {fileID: 21545514}
   - {fileID: 1649433058}
   - {fileID: 540358109}
   - {fileID: 1682514690}
@@ -1162,8 +1163,9 @@ GameObject:
   - component: {fileID: 481548470}
   - component: {fileID: 481548469}
   - component: {fileID: 481548468}
-  m_Layer: 0
-  m_Name: RacletteMachine_Top
+  - component: {fileID: 481548472}
+  m_Layer: 6
+  m_Name: Grill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1188,8 +1190,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 0.5, z: 1}
+  m_Center: {x: 0, y: 0.3, z: 0}
 --- !u!23 &481548469
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1259,8 +1261,25 @@ Transform:
   m_LocalScale: {x: 1, y: 0.25, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 750037035}
+  m_Father: {fileID: 89718757}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &481548472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 481548467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b818f6f78705b724bb87be95cc0c086f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Grill
+  grillCurrentScore: 0
+  grillStartingScore: 0
+  grillMinimumScore: 0
+  grillIntermediateScore: 0
+  grillMaximumScore: 0
 --- !u!1 &530107006
 GameObject:
   m_ObjectHideFlags: 0
@@ -1438,15 +1457,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6365ecead3e9c584bb3352922fe24f73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Poelon
-  intensity: 1
-  intensityMultiplier: 0
+  cookingTime: 10
+  burningTime: 5
+  perfectScoreSavingTime: 15
   hasCheese: 0
   maxScoreReached: 0
-  perfectScoreSavingTime: 15
-  currentScore: 0
-  startingScore: 0
-  minimumScore: -500
-  maximumScore: 1000
+  cheeseCurrentScore: 0
+  cheeseStartingScore: 0
+  cheeseMinimumScore: -500
+  cheeseMaximumScore: 1500
 --- !u!1 &623305653
 GameObject:
   m_ObjectHideFlags: 0
@@ -1586,39 +1605,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!1 &750037034
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 750037035}
-  m_Layer: 0
-  m_Name: RacletteMachnie
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &750037035
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 750037034}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 481548471}
-  - {fileID: 21545514}
-  m_Father: {fileID: 89718757}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &818428688
 GameObject:
   m_ObjectHideFlags: 0
@@ -2310,6 +2296,8 @@ MonoBehaviour:
   spotsScore: 0
   cheesePrefab: {fileID: 705739545792406787, guid: 8a889273f53860646ba2ca9a827eb24b, type: 3}
   lookingForSpot: 0
+  poelon: {fileID: 540358113}
+  grill: {fileID: 481548472}
   mainCamera: {fileID: 233067871}
   maxDistance: 100
   interactableLayer:
@@ -2883,15 +2871,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6365ecead3e9c584bb3352922fe24f73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Poelon
-  intensity: 0
-  intensityMultiplier: 0
+  cookingTime: 0
+  burningTime: 0
+  perfectScoreSavingTime: 15
   hasCheese: 0
   maxScoreReached: 0
-  perfectScoreSavingTime: 15
-  currentScore: 0
-  startingScore: 0
-  minimumScore: 0
-  maximumScore: 0
+  cheeseCurrentScore: 0
+  cheeseStartingScore: 0
+  cheeseMinimumScore: 0
+  cheeseMaximumScore: 0
 --- !u!1 &1675456719
 GameObject:
   m_ObjectHideFlags: 0
@@ -3047,15 +3035,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6365ecead3e9c584bb3352922fe24f73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Poelon
-  intensity: 0
-  intensityMultiplier: 0
+  cookingTime: 0
+  burningTime: 0
+  perfectScoreSavingTime: 15
   hasCheese: 0
   maxScoreReached: 0
-  perfectScoreSavingTime: 15
-  currentScore: 0
-  startingScore: 0
-  minimumScore: 0
-  maximumScore: 0
+  cheeseCurrentScore: 0
+  cheeseStartingScore: 0
+  cheeseMinimumScore: 0
+  cheeseMaximumScore: 0
 --- !u!1 &1730681738
 GameObject:
   m_ObjectHideFlags: 0

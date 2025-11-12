@@ -15,6 +15,10 @@ public class GameManager : MonoBehaviour
 
     public bool lookingForSpot = false;
 
+    [Header("FoodMakers")]
+    public Poelon poelon;
+    public Grill grill;
+
     [Header("Raycast")]
     public Camera mainCamera;
     public float maxDistance = 100f;
@@ -58,7 +62,7 @@ public class GameManager : MonoBehaviour
         Instantiate(cheesePrefab, instantiationPos, Quaternion.identity);
         lookingForSpot = false;
 
-        Poelon.Instance.ResetCheeseScore();
+        poelon.ResetCheeseScore();
 
         Debug.Log("Fromage dans l'assiette !");
     }
