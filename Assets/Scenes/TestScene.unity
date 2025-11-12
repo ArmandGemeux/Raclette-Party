@@ -144,7 +144,7 @@ Transform:
   m_GameObject: {fileID: 601272}
   serializedVersion: 2
   m_LocalRotation: {x: 0.32650557, y: -0.6272114, z: 0.32650557, w: 0.6272114}
-  m_LocalPosition: {x: 1.4, y: 1, z: -0.12}
+  m_LocalPosition: {x: 1.4, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -380,6 +380,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 393016642}
+        m_TargetAssemblyTypeName: FeedbackManager, Assembly-CSharp
+        m_MethodName: MoveCameraToInitialPosition
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &39241352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -429,7 +441,6 @@ GameObject:
   - component: {fileID: 52174063}
   - component: {fileID: 52174066}
   - component: {fileID: 52174065}
-  - component: {fileID: 52174064}
   m_Layer: 6
   m_Name: Plate
   m_TagString: Untagged
@@ -457,27 +468,6 @@ Transform:
   - {fileID: 914332385}
   m_Father: {fileID: 89718757}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &52174064
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 52174062}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.0000001, y: 2, z: 1.0000002}
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!23 &52174065
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -580,6 +570,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 104398504}
+  - component: {fileID: 104398505}
   m_Layer: 6
   m_Name: Spot01
   m_TagString: Untagged
@@ -602,6 +593,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 52174063}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &104398505
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 104398503}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5266082, y: 0.1, z: 0.32966685}
+  m_Center: {x: 0.1458832, y: 0, z: 0.0024401918}
 --- !u!1 &125549017
 GameObject:
   m_ObjectHideFlags: 0
@@ -1024,7 +1036,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8305f14d2097f10468ccee07a8c6475c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
-  cheeseButtons:
+  currentCheeseScore: {fileID: 2023347727}
+  currentPlateScore: {fileID: 0}
+  cheeseInterface:
   - {fileID: 39241350}
   - {fileID: 1333060177}
   - {fileID: 1622217199}
@@ -1044,6 +1058,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 340857167}
+  - component: {fileID: 340857168}
   m_Layer: 6
   m_Name: Spot04
   m_TagString: Untagged
@@ -1066,6 +1081,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 52174063}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &340857168
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340857166}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.34, y: 0.1, z: 0.44755718}
+  m_Center: {x: 0, y: 0, z: 0.08162816}
 --- !u!1 &393016641
 GameObject:
   m_ObjectHideFlags: 0
@@ -1098,6 +1134,7 @@ MonoBehaviour:
   mainCamera: {fileID: 233067871}
   mainCameraPos: {fileID: 999092280}
   middlePoelonCamPos: {fileID: 601276}
+  plateCamSpot: {fileID: 2116438005}
 --- !u!4 &393016643
 Transform:
   m_ObjectHideFlags: 0
@@ -1233,6 +1270,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 530107007}
+  - component: {fileID: 530107008}
   m_Layer: 6
   m_Name: Spot03
   m_TagString: Untagged
@@ -1255,6 +1293,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 52174063}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &530107008
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 530107006}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.3400038, y: 0.1, z: 0.43312034}
+  m_Center: {x: 0.0000018775463, y: 0, z: -0.099573806}
 --- !u!1 &540358108
 GameObject:
   m_ObjectHideFlags: 0
@@ -1648,6 +1707,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 914332385}
+  - component: {fileID: 914332386}
   m_Layer: 6
   m_Name: Spot05
   m_TagString: Untagged
@@ -1670,6 +1730,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 52174063}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &914332386
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 914332384}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.33277208, y: 0.1, z: 0.4849242}
+  m_Center: {x: 0.0036139786, y: 0, z: -0.12886494}
 --- !u!1 &917255618
 GameObject:
   m_ObjectHideFlags: 0
@@ -1868,6 +1949,81 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 25, y: -90, z: 0}
+--- !u!1 &1065590614
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1065590615}
+  - component: {fileID: 1065590617}
+  - component: {fileID: 1065590616}
+  m_Layer: 5
+  m_Name: ScoreBG
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1065590615
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1065590614}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1118611508}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -25}
+  m_SizeDelta: {x: 320, y: 150}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1065590616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1065590614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.9607844, g: 0.65882355, b: 0.17254902, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1065590617
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1065590614}
+  m_CullTransparentMesh: 1
 --- !u!1 &1118611507
 GameObject:
   m_ObjectHideFlags: 0
@@ -1878,7 +2034,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1118611508}
   m_Layer: 5
-  m_Name: Score
+  m_Name: CurrentCheeseInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1896,13 +2052,14 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1065590615}
   - {fileID: 1540911529}
   - {fileID: 2023347726}
   m_Father: {fileID: 291887434}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 505, y: 50}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1289409862
@@ -1914,6 +2071,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1289409863}
+  - component: {fileID: 1289409864}
   m_Layer: 6
   m_Name: Spot02
   m_TagString: Untagged
@@ -1936,6 +2094,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 52174063}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1289409864
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1289409862}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.3308385, y: 0.1, z: 0.42431375}
+  m_Center: {x: -0.004580766, y: 0, z: 0.029951617}
 --- !u!1 &1333060176
 GameObject:
   m_ObjectHideFlags: 0
@@ -2130,6 +2309,12 @@ MonoBehaviour:
   - {x: 1e-45, y: 0, z: 3e-45}
   spotsScore: 0
   cheesePrefab: {fileID: 705739545792406787, guid: 8a889273f53860646ba2ca9a827eb24b, type: 3}
+  lookingForSpot: 0
+  mainCamera: {fileID: 233067871}
+  maxDistance: 100
+  interactableLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!4 &1383017558
 Transform:
   m_ObjectHideFlags: 0
@@ -2293,7 +2478,7 @@ GameObject:
   - component: {fileID: 1540911531}
   - component: {fileID: 1540911530}
   m_Layer: 5
-  m_Name: CurrentCheeseScore
+  m_Name: ScoreCuissonText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2315,7 +2500,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 300}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 300, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1540911530
@@ -2372,7 +2557,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -2524,6 +2709,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 393016642}
+        m_TargetAssemblyTypeName: FeedbackManager, Assembly-CSharp
+        m_MethodName: MoveCameraToInitialPosition
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1622217201
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2581,7 +2778,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1649433058
 Transform:
   m_ObjectHideFlags: 0
@@ -2745,7 +2942,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1682514690
 Transform:
   m_ObjectHideFlags: 0
@@ -2859,58 +3056,6 @@ MonoBehaviour:
   startingScore: 0
   minimumScore: 0
   maximumScore: 0
---- !u!1 &1690783729
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1690783731}
-  - component: {fileID: 1690783730}
-  m_Layer: 0
-  m_Name: RaycastManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1690783730
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1690783729}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fab1aa66716076e4e8001e832ef9ae3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Raycast
-  mainCamera: {fileID: 233067871}
-  maxDistance: 100
-  interactableLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  hitColor: {r: 0, g: 1, b: 0, a: 1}
-  debugSphereSize: 0.1
-  UIManager: {fileID: 291887435}
---- !u!4 &1690783731
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1690783729}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1730681738
 GameObject:
   m_ObjectHideFlags: 0
@@ -3081,7 +3226,7 @@ GameObject:
   - component: {fileID: 2023347728}
   - component: {fileID: 2023347727}
   m_Layer: 5
-  m_Name: ActualCheeseScore
+  m_Name: CurrentCheeseScore
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3103,7 +3248,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 250}
+  m_AnchoredPosition: {x: 0, y: -50}
   m_SizeDelta: {x: 300, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2023347727
@@ -3205,18 +3350,49 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2023347725}
   m_CullTransparentMesh: 1
+--- !u!1 &2116438004
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2116438005}
+  m_Layer: 0
+  m_Name: PlateCamPos
+  m_TagString: MainCamera
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &2116438005
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2116438004}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.32650557, y: -0.6272114, z: 0.32650557, w: 0.6272114}
+  m_LocalPosition: {x: 2.25, y: 0.7, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 55, y: -90, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1675456720}
   - {fileID: 233067872}
+  - {fileID: 2116438005}
   - {fileID: 999092280}
   - {fileID: 601276}
   - {fileID: 959619906}
   - {fileID: 1768683388}
   - {fileID: 1730681739}
-  - {fileID: 1690783731}
   - {fileID: 1383017558}
   - {fileID: 393016643}
   - {fileID: 125549018}

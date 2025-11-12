@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class Poelon : MonoBehaviour, IInteractable
 {
+    //Singleton mais pas ouf si on veut en gérer plusieurs après :(
+    public static Poelon Instance { get; private set; }
+
+
     [Range(0, 10)]
     public int intensity;
     [Range(0, 1f)]
@@ -36,6 +40,18 @@ public class Poelon : MonoBehaviour, IInteractable
     public Button sendToPlateButton;
     [Space]
     public Button returnButton;*/
+    void Awake()
+    {
+        // Vérifie qu’il n’y a qu’un seul GameManager
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject); // persiste entre les scènes
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -50,6 +66,8 @@ public class Poelon : MonoBehaviour, IInteractable
         {
             maxScoreReached = true;
         }
+
+        UIManager.Instance.currentCheeseScore.text = currentScore.ToString();
 
         /*if (hasCheese == true && maxScoreReached == false)
         {
@@ -80,6 +98,8 @@ public class Poelon : MonoBehaviour, IInteractable
         //Feedbacks à déplacer dans un Feedback Manager (récupérer position du poélon) ?
 
         UIManager.Instance.SlideInCheeseButtons();
+        FeedbackManager.Instance.MoveCameraToMiddlePoelon();
+
         transform.DOMove(new Vector3(1.02f, 0.45f, 0f), 0.5f);
 
         //Draw UI here
@@ -108,11 +128,11 @@ public class Poelon : MonoBehaviour, IInteractable
         if (maxScoreReached == false && hasCheese == false)
         {
             hasCheese = true;
-            DOTween.To(() => currentScore, x => currentScore = x, maximumScore, 10 / intensity);
+            DOTween.To(() => currentScore, x => currentScore = x, maximumScore, 10 / intensity).SetId("currentScoreIncrease"); ;
 
             //ajouter un délai léger ici, pour que les boutons se désactivent hors champ
-            UIManager.Instance.cheeseButtons[0].gameObject.SetActive(false);
-            UIManager.Instance.cheeseButtons[1].gameObject.SetActive(true);
+            UIManager.Instance.cheeseInterface[0].gameObject.SetActive(false);
+            UIManager.Instance.cheeseInterface[1].gameObject.SetActive(true);
 
             //AddCheeseButton == Desactivé, on active juste l'autre
 
@@ -127,12 +147,33 @@ public class Poelon : MonoBehaviour, IInteractable
 
     public void SendToPlate()
     {
-        GameManager.Instance.InstantiateCheesePrefab();
+        //Caméra assiette + attends un clic dans la bonne position (bool isChoosingSpot, et dans assiette Interactable attends que ce bool soit validé ?)
 
-        UIManager.Instance.cheeseButtons[0].gameObject.SetActive(true);
-        UIManager.Instance.cheeseButtons[1].gameObject.SetActive(false);
+        //GameManager.Instance.InstantiateCheesePrefab();
 
-        Debug.Log("Fromage dans l'assiette !");
+        DOTween.Pause("currentScoreIncrease");
+
+        GameManager.Instance.lookingForSpot = true;
+
+        GameManager.Instance.GetCheeseData(currentScore);
+
+        FeedbackManager.Instance.MoveCameraToPlate();
+        UIManager.Instance.SlideOutCheeseButtons();
+
+        UIManager.Instance.cheeseInterface[0].gameObject.SetActive(true);
+        UIManager.Instance.cheeseInterface[1].gameObject.SetActive(false);
+
+        //ResetCheeseScore();
+    }
+
+    public void ResetCheeseScore()
+    {
+        hasCheese = false;
+        maxScoreReached = false;
+        DOTween.Restart("currentScoreIncrease");
+        DOTween.Kill("currentScoreIncrease");
+
+        currentScore = 0;
     }
 
     async Task CheeseBurning()

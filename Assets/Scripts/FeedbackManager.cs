@@ -14,8 +14,7 @@ public class FeedbackManager : MonoBehaviour
     [Space]
     public Transform mainCameraPos;
     public Transform middlePoelonCamPos;
-
-
+    public Transform plateCamSpot;
 
     void Awake()
     {
@@ -42,5 +41,12 @@ public class FeedbackManager : MonoBehaviour
         Sequence seq = DOTween.Sequence();
         seq.Append(mainCamera.transform.DOMove(middlePoelonCamPos.position, 0.5f))
             .Join(mainCamera.transform.DORotate(middlePoelonCamPos.eulerAngles, 0.5f));
+    }
+    public void MoveCameraToPlate()
+    {
+        Debug.Log("A l'assiette la cam !");
+        Sequence seq = DOTween.Sequence();
+        seq.Append(mainCamera.transform.DOMove(plateCamSpot.position, 0.5f))
+            .Join(mainCamera.transform.DORotate(plateCamSpot.eulerAngles, 0.5f));
     }
 }

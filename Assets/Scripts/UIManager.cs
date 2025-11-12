@@ -1,13 +1,16 @@
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
 
-
-    public RectTransform[] cheeseButtons;
+    [Header("References")]
+    public TextMeshProUGUI currentCheeseScore;
+    public TextMeshProUGUI currentPlateScore;
+    public RectTransform[] cheeseInterface;
 
     [Space]
     public float slideInDuration = 0.6f;
@@ -42,45 +45,46 @@ public class UIManager : MonoBehaviour
         DontDestroyOnLoad(gameObject); // persiste entre les scènes
     }
 
+    void Update()
+    {
+
+    }
+
     void Start()
     {
-        targetPos = new Vector2[cheeseButtons.Length];
+        targetPos = new Vector2[cheeseInterface.Length];
 
-        for (int i = 0; i < cheeseButtons.Length; i++)
+        for (int i = 0; i < cheeseInterface.Length; i++)
         {
-            RectTransform btn = cheeseButtons[i];
+            RectTransform btn = cheeseInterface[i];
 
             targetPos[i] = btn.anchoredPosition;
             btn.anchoredPosition = new Vector2(-1500f, targetPos[i].y);
         }
 
-        cheeseButtons[1].gameObject.SetActive(false);
+        cheeseInterface[1].gameObject.SetActive(false);
     }
 
     public void SlideInCheeseButtons()
     {
         UIOnScreen = true;
 
-        for (int i = 0; i < cheeseButtons.Length; i++)
+        for (int i = 0; i < cheeseInterface.Length; i++)
         {
-            RectTransform btn = cheeseButtons[i];
+            RectTransform btn = cheeseInterface[i];
 
             btn.DOAnchorPos(targetPos[i], slideInDuration).SetEase(Ease.OutBack).SetDelay(i * delayBetweenButtons);
         }
-
-        FeedbackManager.Instance.MoveCameraToMiddlePoelon();
     }
     public void SlideOutCheeseButtons()
     {
         UIOnScreen = false;
 
-        for (int i = 0; i < cheeseButtons.Length; i++)
+        for (int i = 0; i < cheeseInterface.Length; i++)
         {
-            RectTransform btn = cheeseButtons[i];
+            RectTransform btn = cheeseInterface[i];
 
             btn.DOAnchorPos(new Vector2(-1500f, targetPos[i].y), slideOutDuration).SetEase(Ease.InOutBack).SetDelay(i * delayBetweenButtons);
         }
-
-        FeedbackManager.Instance.MoveCameraToInitialPosition();
     }
 }
