@@ -24,7 +24,9 @@ public class Poelon : MonoBehaviour, IInteractable
     public int minimumScore;
     public int maximumScore;
 
-    [Header("UI & Feedback")]
+    private Vector3 initialPos;
+
+    /*[Header("UI & Feedback")]
     public UIManager UIManager;
     public Camera mainCamera;
 
@@ -33,12 +35,12 @@ public class Poelon : MonoBehaviour, IInteractable
     public Button addCheeseButton;
     public Button sendToPlateButton;
     [Space]
-    public Button returnButton;
+    public Button returnButton;*/
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        initialPos = transform.position;
     }
 
     // Update is called once per frame
@@ -76,12 +78,10 @@ public class Poelon : MonoBehaviour, IInteractable
         //CheeseBaking();
 
         //Feedbacks à déplacer dans un Feedback Manager (récupérer position du poélon) ?
-        UIManager.SlideInButtons();
+
+        UIManager.Instance.SlideInCheeseButtons();
         transform.DOMove(new Vector3(1.02f, 0.45f, 0f), 0.5f);
 
-        Sequence seq = DOTween.Sequence();
-        seq.Append(mainCamera.transform.DOMove(new Vector3(1.4f, 1f, -0.12f), 0.5f))
-            .Join(mainCamera.transform.DORotate(new Vector3(55f, -90f, 0f), 0.5f));
         //Draw UI here
 
 
@@ -98,12 +98,24 @@ public class Poelon : MonoBehaviour, IInteractable
         Quand clic fait, on instancie le fromage dans le spot, on le retire du poélon, il retourne dans l'appareil*/
     }
 
+    public void SetInitialPosition()
+    {
+        transform.DOMove(initialPos, 0.5f);
+    }
+
     public void CheeseBaking()
     {
         if (maxScoreReached == false && hasCheese == false)
         {
             hasCheese = true;
             DOTween.To(() => currentScore, x => currentScore = x, maximumScore, 10 / intensity);
+
+            //ajouter un délai léger ici, pour que les boutons se désactivent hors champ
+            UIManager.Instance.cheeseButtons[0].gameObject.SetActive(false);
+            UIManager.Instance.cheeseButtons[1].gameObject.SetActive(true);
+
+            //AddCheeseButton == Desactivé, on active juste l'autre
+
             //Quand le score max est atteint, lance un chrono de perfectScoreSavingTime. Quand celui-ci est complet, lance CheeseBurning();
         }
         else
@@ -116,6 +128,10 @@ public class Poelon : MonoBehaviour, IInteractable
     public void SendToPlate()
     {
         GameManager.Instance.InstantiateCheesePrefab();
+
+        UIManager.Instance.cheeseButtons[0].gameObject.SetActive(true);
+        UIManager.Instance.cheeseButtons[1].gameObject.SetActive(false);
+
         Debug.Log("Fromage dans l'assiette !");
     }
 

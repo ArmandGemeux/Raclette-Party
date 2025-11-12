@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    public static UIManager Instance { get; private set; }
+
+
     public RectTransform[] cheeseButtons;
 
     [Space]
@@ -17,7 +20,28 @@ public class UIManager : MonoBehaviour
 
     public Camera mainCamera;
 
+    [Space]
+    public Transform mainCameraPos;
+    public Transform middlePoelonCamPos;
+
+    //public Camera leftPoelonCamera;
+    //public Camera rightPoelonCamera;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    void Awake()
+    {
+        // Vérifie qu’il n’y a qu’un seul GameManager
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject); // persiste entre les scènes
+    }
+
     void Start()
     {
         targetPos = new Vector2[cheeseButtons.Length];
@@ -29,9 +53,11 @@ public class UIManager : MonoBehaviour
             targetPos[i] = btn.anchoredPosition;
             btn.anchoredPosition = new Vector2(-1500f, targetPos[i].y);
         }
+
+        cheeseButtons[1].gameObject.SetActive(false);
     }
 
-    public void SlideInButtons()
+    public void SlideInCheeseButtons()
     {
         UIOnScreen = true;
 
@@ -41,8 +67,10 @@ public class UIManager : MonoBehaviour
 
             btn.DOAnchorPos(targetPos[i], slideInDuration).SetEase(Ease.OutBack).SetDelay(i * delayBetweenButtons);
         }
+
+        FeedbackManager.Instance.MoveCameraToMiddlePoelon();
     }
-    public void SlideOutButtons()
+    public void SlideOutCheeseButtons()
     {
         UIOnScreen = false;
 
@@ -53,8 +81,6 @@ public class UIManager : MonoBehaviour
             btn.DOAnchorPos(new Vector2(-1500f, targetPos[i].y), slideOutDuration).SetEase(Ease.InOutBack).SetDelay(i * delayBetweenButtons);
         }
 
-        Sequence seq = DOTween.Sequence();
-        seq.Append(mainCamera.transform.DOMove(new Vector3(1.85f, 1f, 0f), 0.5f))
-            .Join(mainCamera.transform.DORotate(new Vector3(25f, -90f, 0f), 0.5f));
+        FeedbackManager.Instance.MoveCameraToInitialPosition();
     }
 }
