@@ -12,8 +12,10 @@ public class GameManager : MonoBehaviour
     public int spotsScore;
 
     public GameObject cheesePrefab;
+    public GameObject grillPrefab;
 
-    public bool lookingForSpot = false;
+    public bool lookingForCheeseSpot = false;
+    public bool lookingForGrillSpot = false;
 
     [Header("FoodMakers")]
     public Poelon poelon;
@@ -34,6 +36,8 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject); // persiste entre les scènes
+
+        //DOTween.Init(true, true, LogBehaviour.Verbose).SetCapacity(2000, 100);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -45,13 +49,17 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && lookingForSpot == false) // clic gauche
+        if (Input.GetMouseButtonDown(0) && lookingForCheeseSpot == false && lookingForGrillSpot == false) // clic gauche
         {
             CastRay();
         }
-        else if (Input.GetMouseButtonDown(0) && lookingForSpot)
+        else if (Input.GetMouseButtonDown(0) && lookingForCheeseSpot)
         {
             LookForCheeseSpot();
+        }
+        else if (Input.GetMouseButtonDown(0) && lookingForGrillSpot)
+        {
+            LookForGrillSpot();
         }
 
         //UIManager.Instance.currentPlateScore.text = spotsScore.ToString();
@@ -60,11 +68,20 @@ public class GameManager : MonoBehaviour
     public void InstantiateCheesePrefab(Vector3 instantiationPos)
     {
         Instantiate(cheesePrefab, instantiationPos, Quaternion.identity);
-        lookingForSpot = false;
+        lookingForCheeseSpot = false;
 
         poelon.ResetCheeseScore();
 
         Debug.Log("Fromage dans l'assiette !");
+    }
+    public void InstantiateGrillPrefab(Vector3 instantiationPos)
+    {
+        Instantiate(grillPrefab, instantiationPos, Quaternion.identity);
+        lookingForGrillSpot = false;
+
+        grill.ResetGrillScore();
+
+        Debug.Log("Viande dans l'assiette !");
     }
 
     void CastRay()
@@ -115,8 +132,30 @@ public class GameManager : MonoBehaviour
             //Debug.Log("No object hit.");
         }
     }
+    public void LookForGrillSpot()
+    {
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, maxDistance, interactableLayer))
+        {
+            //Debug.Log($"Hit: {hitInfo.collider.name} at {hitInfo.point}");
+
+            var interactable = hitInfo.collider.GetComponent<Transform>();
+            InstantiateGrillPrefab(interactable.position);
+            FeedbackManager.Instance.MoveCameraToInitialPosition();
+        }
+        else
+        {
+            //Debug.Log("No object hit.");
+        }
+    }
 
     public void GetCheeseData(int scoreReceived)
+    {
+        spotsScore += scoreReceived;
+    }
+
+    public void GetGrillData(int scoreReceived)
     {
         spotsScore += scoreReceived;
     }

@@ -7,17 +7,23 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
 
-    [Header("References")]
-    public TextMeshProUGUI currentCheeseScore;
     public TextMeshProUGUI currentPlateScore;
+
+    [Header("References Cheese")]
+    public TextMeshProUGUI currentCheeseScore;
     public RectTransform[] cheeseInterface;
+
+    [Header("References Grill")]
+    public TextMeshProUGUI currentGrillScore;
+    public RectTransform[] grillInterface;
 
     [Space]
     public float slideInDuration = 0.6f;
     public float slideOutDuration = 0.4f;
     public float delayBetweenButtons = 0.2f;
 
-    private Vector2[] targetPos;
+    private Vector2[] cheeseInterfaceTargetPos;
+    private Vector2[] grillInterfaceTargetPos;
 
     public bool UIOnScreen;
 
@@ -26,6 +32,7 @@ public class UIManager : MonoBehaviour
     [Space]
     public Transform mainCameraPos;
     public Transform middlePoelonCamPos;
+    public Transform grillCamPos;
 
     //public Camera leftPoelonCamera;
     //public Camera rightPoelonCamera;
@@ -45,24 +52,33 @@ public class UIManager : MonoBehaviour
         DontDestroyOnLoad(gameObject); // persiste entre les scènes
     }
 
-    void Update()
-    {
-
-    }
-
     void Start()
     {
-        targetPos = new Vector2[cheeseInterface.Length];
+        cheeseInterfaceTargetPos = new Vector2[cheeseInterface.Length];
 
         for (int i = 0; i < cheeseInterface.Length; i++)
         {
             RectTransform btn = cheeseInterface[i];
 
-            targetPos[i] = btn.anchoredPosition;
-            btn.anchoredPosition = new Vector2(-1500f, targetPos[i].y);
+            cheeseInterfaceTargetPos[i] = btn.anchoredPosition;
+            btn.anchoredPosition = new Vector2(-1500f, cheeseInterfaceTargetPos[i].y);
         }
 
         cheeseInterface[1].gameObject.SetActive(false);
+
+
+        grillInterfaceTargetPos = new Vector2[grillInterface.Length];
+
+        for (int i = 0; i < grillInterface.Length; i++)
+        {
+            RectTransform btn = grillInterface[i];
+
+            grillInterfaceTargetPos[i] = btn.anchoredPosition;
+            btn.anchoredPosition = new Vector2(-1500f, grillInterfaceTargetPos[i].y);
+        }
+
+        grillInterface[1].gameObject.SetActive(false);
+        grillInterface[2].gameObject.SetActive(false);
     }
 
     public void SlideInCheeseButtons()
@@ -73,7 +89,7 @@ public class UIManager : MonoBehaviour
         {
             RectTransform btn = cheeseInterface[i];
 
-            btn.DOAnchorPos(targetPos[i], slideInDuration).SetEase(Ease.OutBack).SetDelay(i * delayBetweenButtons);
+            btn.DOAnchorPos(cheeseInterfaceTargetPos[i], slideInDuration).SetEase(Ease.OutBack).SetDelay(i * delayBetweenButtons);
         }
     }
     public void SlideOutCheeseButtons()
@@ -84,7 +100,29 @@ public class UIManager : MonoBehaviour
         {
             RectTransform btn = cheeseInterface[i];
 
-            btn.DOAnchorPos(new Vector2(-1500f, targetPos[i].y), slideOutDuration).SetEase(Ease.InOutBack).SetDelay(i * delayBetweenButtons);
+            btn.DOAnchorPos(new Vector2(-1500f, cheeseInterfaceTargetPos[i].y), slideOutDuration).SetEase(Ease.InOutBack).SetDelay(i * delayBetweenButtons);
+        }
+    }
+    public void SlideInGrillButtons()
+    {
+        UIOnScreen = true;
+
+        for (int i = 0; i < grillInterface.Length; i++)
+        {
+            RectTransform btn = grillInterface[i];
+
+            btn.DOAnchorPos(grillInterfaceTargetPos[i], slideInDuration).SetEase(Ease.OutBack).SetDelay(i * delayBetweenButtons);
+        }
+    }
+    public void SlideOutGrillButtons()
+    {
+        UIOnScreen = false;
+
+        for (int i = 0; i < grillInterface.Length; i++)
+        {
+            RectTransform btn = grillInterface[i];
+
+            btn.DOAnchorPos(new Vector2(-1500f, grillInterfaceTargetPos[i].y), slideOutDuration).SetEase(Ease.InOutBack).SetDelay(i * delayBetweenButtons);
         }
     }
 }

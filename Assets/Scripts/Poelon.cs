@@ -16,6 +16,7 @@ public class Poelon : MonoBehaviour, IInteractable
     [Header("State checkers")]
     public bool hasCheese = false;
     public bool maxScoreReached = false;
+    bool savingCheeseScore = false;
 
     [Header("Cheese Values")]
     public int cheeseCurrentScore;
@@ -49,7 +50,7 @@ public class Poelon : MonoBehaviour, IInteractable
     // Update is called once per frame
     void Update()
     {
-        if (cheeseCurrentScore >= cheeseMaximumScore)
+        if (cheeseCurrentScore >= cheeseMaximumScore && savingCheeseScore == false)
         {
             maxScoreReached = true;
             PerfectCheeseSavingDelay();
@@ -76,7 +77,7 @@ public class Poelon : MonoBehaviour, IInteractable
         Le changement de lerp se fait grâce à un changement d'état ("Cuit = true")*/
     }
 
-    public async void OnInteract()
+    public void OnInteract()
     {
         //Debug.Log("Oh oh, je suis un poélon coquinou ! :) ");
 
@@ -143,7 +144,7 @@ public class Poelon : MonoBehaviour, IInteractable
 
         DOTween.Pause("currentScoreIncrease");
 
-        GameManager.Instance.lookingForSpot = true;
+        GameManager.Instance.lookingForCheeseSpot = true;
 
         GameManager.Instance.GetCheeseData(cheeseCurrentScore);
 
@@ -152,8 +153,6 @@ public class Poelon : MonoBehaviour, IInteractable
 
         UIManager.Instance.cheeseInterface[0].gameObject.SetActive(true);
         UIManager.Instance.cheeseInterface[1].gameObject.SetActive(false);
-
-        //ResetCheeseScore();
     }
 
     public void ResetCheeseScore()
@@ -163,22 +162,28 @@ public class Poelon : MonoBehaviour, IInteractable
         maxScoreReached = false;
         DOTween.Restart("currentScoreIncrease");
         DOTween.Kill("currentScoreIncrease");
+        DOTween.Kill("currentScoreDecrease");
 
         cheeseCurrentScore = 0;
     }
 
     public void CheeseBurning()
     {
+        savingCheeseScore = false;
         Debug.Log("ça crame wsh");
-        DOTween.To(() => cheeseCurrentScore, x => cheeseCurrentScore = x, cheeseMinimumScore, burningTime);
+        DOTween.To(() => cheeseCurrentScore, x => cheeseCurrentScore = x, cheeseMinimumScore, burningTime).SetId("currentScoreDecrease");
     }
 
     private void PerfectCheeseSavingDelay()
     {
-        maxScoreReached = false;
-        float timer = 0f;
-        DOTween.To(() => timer, x => timer = x, perfectScoreSavingTime, perfectScoreSavingTime); //Ajouter un délai ici
-        CheeseBurning();
-        //Chrono de perfectScoreSavingTime durée, qui une fois à zéro, lance CheeseBurning();
+        savingCheeseScore = true;
+        /*float timer = 0f;
+        DOTween.To(() => timer, x => timer = x, perfectScoreSavingTime, perfectScoreSavingTime); //Ajouter un délai ici*/
+        Debug.Log("On lance le timer de sauvegarde");
+
+        DOVirtual.DelayedCall(perfectScoreSavingTime, () =>
+        {
+            CheeseBurning();
+        });
     }
 }
