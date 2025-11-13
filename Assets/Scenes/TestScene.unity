@@ -1458,7 +1458,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Poelon
   cookingTime: 10
-  burningTime: 5
+  burningTime: 30
   perfectScoreSavingTime: 15
   hasCheese: 0
   maxScoreReached: 0
@@ -1466,6 +1466,7 @@ MonoBehaviour:
   cheeseStartingScore: 0
   cheeseMinimumScore: -500
   cheeseMaximumScore: 1500
+  cheesePrefab: {fileID: 705739545792406787, guid: 8a889273f53860646ba2ca9a827eb24b, type: 3}
 --- !u!1 &623305653
 GameObject:
   m_ObjectHideFlags: 0
@@ -2880,6 +2881,7 @@ MonoBehaviour:
   cheeseStartingScore: 0
   cheeseMinimumScore: 0
   cheeseMaximumScore: 0
+  cheesePrefab: {fileID: 0}
 --- !u!1 &1675456719
 GameObject:
   m_ObjectHideFlags: 0
@@ -3044,6 +3046,7 @@ MonoBehaviour:
   cheeseStartingScore: 0
   cheeseMinimumScore: 0
   cheeseMaximumScore: 0
+  cheesePrefab: {fileID: 0}
 --- !u!1 &1730681738
 GameObject:
   m_ObjectHideFlags: 0

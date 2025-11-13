@@ -25,6 +25,8 @@ public class Poelon : MonoBehaviour, IInteractable
     public int cheeseMinimumScore;
     public int cheeseMaximumScore;
 
+    public GameObject cheesePrefab;
+    private GameObject instantiatedCheesePrefab;
     private Vector3 initialPos;
 
     /*[Header("UI & Feedback")]
@@ -50,6 +52,7 @@ public class Poelon : MonoBehaviour, IInteractable
         if (cheeseCurrentScore >= cheeseMaximumScore)
         {
             maxScoreReached = true;
+            PerfectCheeseSavingDelay();
         }
 
         UIManager.Instance.currentCheeseScore.text = cheeseCurrentScore.ToString();
@@ -113,6 +116,8 @@ public class Poelon : MonoBehaviour, IInteractable
         if (maxScoreReached == false && hasCheese == false)
         {
             hasCheese = true;
+            instantiatedCheesePrefab = Instantiate(cheesePrefab, gameObject.transform.position, Quaternion.identity);
+            instantiatedCheesePrefab.transform.SetParent(gameObject.transform);
             DOTween.To(() => cheeseCurrentScore, x => cheeseCurrentScore = x, cheeseMaximumScore, cookingTime).SetId("currentScoreIncrease"); ;
 
             //ajouter un délai léger ici, pour que les boutons se désactivent hors champ
@@ -153,6 +158,7 @@ public class Poelon : MonoBehaviour, IInteractable
 
     public void ResetCheeseScore()
     {
+        Destroy(instantiatedCheesePrefab);
         hasCheese = false;
         maxScoreReached = false;
         DOTween.Restart("currentScoreIncrease");
@@ -161,14 +167,18 @@ public class Poelon : MonoBehaviour, IInteractable
         cheeseCurrentScore = 0;
     }
 
-    async Task CheeseBurning()
+    public void CheeseBurning()
     {
+        Debug.Log("ça crame wsh");
         DOTween.To(() => cheeseCurrentScore, x => cheeseCurrentScore = x, cheeseMinimumScore, burningTime);
     }
 
     private void PerfectCheeseSavingDelay()
     {
-        //DOTween.To(() => 0f, x => 
+        maxScoreReached = false;
+        float timer = 0f;
+        DOTween.To(() => timer, x => timer = x, perfectScoreSavingTime, perfectScoreSavingTime); //Ajouter un délai ici
+        CheeseBurning();
         //Chrono de perfectScoreSavingTime durée, qui une fois à zéro, lance CheeseBurning();
     }
 }
