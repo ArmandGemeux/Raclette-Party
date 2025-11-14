@@ -14,9 +14,10 @@ public class Grill : MonoBehaviour, IInteractable
 
     [Header("State checkers")]
     public bool hasGrill;
+    public bool isFlipped;
     public bool intermediateGrillScoreReached;
     public bool maxGrillScoreReached;
-    bool savingGrillScore = false;
+    public bool savingGrillScore;
     [Space]
 
     [Header("Grill Values")]
@@ -39,15 +40,17 @@ public class Grill : MonoBehaviour, IInteractable
     // Update is called once per frame
     void Update()
     {
-        if (grillCurrentScore >= grillIntermediateScore && savingGrillScore == false && intermediateGrillScoreReached == false)
+        if (grillCurrentScore >= grillIntermediateScore && !savingGrillScore && !intermediateGrillScoreReached && !isFlipped)
         {
             intermediateGrillScoreReached = true;
+            Debug.Log("Score intermédiaire atteint");
             IntermediatePerfectGrillSavingDelay();
         }
 
-        if (grillCurrentScore >= grillMaximumScore && savingGrillScore == false)
+        if (grillCurrentScore >= currentMaximumScore && !savingGrillScore && isFlipped)
         {
             maxGrillScoreReached = true;
+            Debug.Log("Score maximum possible atteint");
             MaxPerfectGrillSavingDelay();
         }
     }
@@ -64,7 +67,7 @@ public class Grill : MonoBehaviour, IInteractable
             hasGrill = true;
             instantiatedGrillPrefab = Instantiate(grillPrefab, gameObject.transform.position, Quaternion.identity);
             //instantiatedCheesePrefab.transform.SetParent(gameObject.transform);
-            DOTween.To(() => grillCurrentScore, x => grillCurrentScore = x, grillIntermediateScore, cookingTime).SetId("fisrtGrillScoreIncrease"); ;
+            DOTween.To(() => grillCurrentScore, x => grillCurrentScore = x, grillIntermediateScore, cookingTime).SetId("firstGrillScoreIncrease"); ;
 
             //ajouter un délai léger ici, pour que les boutons se désactivent hors champ
             UIManager.Instance.grillInterface[0].gameObject.SetActive(false);
@@ -76,7 +79,6 @@ public class Grill : MonoBehaviour, IInteractable
         }
         else
         {
-            Debug.Log("Y'a déjà de la viande gros gourmand");
             return;
         }
     }
@@ -84,8 +86,12 @@ public class Grill : MonoBehaviour, IInteractable
     {
         if (hasGrill)
         {
+            isFlipped = true;
+            savingGrillScore = false;
             //DoTween : Retourner la viande
-            DOTween.Pause("grillScoreDecrease");
+            DOTween.Pause("firstGrillScoreDecrease");
+            DOTween.Restart("TimeSavingDelay");
+            DOTween.Pause("TimeSavingDelay");
 
             //Trouver logique pour additionner la valeur au currentScore plutôt que de l'y emmener
 
@@ -101,7 +107,6 @@ public class Grill : MonoBehaviour, IInteractable
         }
         else
         {
-            Debug.Log("Y'a déjà de la viande gros gourmand");
             return;
         }
     }
@@ -111,7 +116,7 @@ public class Grill : MonoBehaviour, IInteractable
 
         //GameManager.Instance.InstantiateCheesePrefab();
 
-        DOTween.Pause("fisrtGrillScoreIncrease");
+        DOTween.Pause("firstGrillScoreIncrease");
         DOTween.Pause("secondGrillScoreIncrease");
 
         DOTween.Pause("firstGrillScoreDecrease");
@@ -124,9 +129,9 @@ public class Grill : MonoBehaviour, IInteractable
         FeedbackManager.Instance.MoveCameraToPlate();
         UIManager.Instance.SlideOutGrillButtons();
 
-        UIManager.Instance.cheeseInterface[0].gameObject.SetActive(true);
-        UIManager.Instance.cheeseInterface[1].gameObject.SetActive(false);
-        UIManager.Instance.cheeseInterface[2].gameObject.SetActive(false);
+        UIManager.Instance.grillInterface[0].gameObject.SetActive(true);
+        UIManager.Instance.grillInterface[1].gameObject.SetActive(false);
+        UIManager.Instance.grillInterface[2].gameObject.SetActive(false);
     }
 
     private void IntermediateGrillBurning()
@@ -160,45 +165,50 @@ public class Grill : MonoBehaviour, IInteractable
     private void IntermediatePerfectGrillSavingDelay()
     {
         savingGrillScore = true;
-        DOTween.Pause("fisrtGrillScoreIncrease");
+        DOTween.Pause("firstGrillScoreIncrease");
         /*float timer = 0f;
         DOTween.To(() => timer, x => timer = x, perfectScoreSavingTime, perfectScoreSavingTime); //Ajouter un délai ici*/
-        Debug.Log("On lance le timer de sauvegarde");
+        Debug.Log("On lance le timer de sauvegarde n°1");
 
         DOVirtual.DelayedCall(perfectScoreSavingTime, () =>
         {
             IntermediateGrillBurning();
-        });
+        }).SetId("TimeSavingDelay");
     }
     private void MaxPerfectGrillSavingDelay()
     {
         savingGrillScore = true;
+        DOTween.Pause("firstGrillScoreIncrease");
         DOTween.Pause("secondGrillScoreIncrease");
         /*float timer = 0f;
         DOTween.To(() => timer, x => timer = x, perfectScoreSavingTime, perfectScoreSavingTime); //Ajouter un délai ici*/
-        Debug.Log("On lance le timer de sauvegarde");
+        Debug.Log("On lance le timer de sauvegarde n°2");
 
         DOVirtual.DelayedCall(perfectScoreSavingTime, () =>
         {
             MaxGrillBurning();
-        });
+        }).SetId("TimeSavingDelay");
     }
 
     public void ResetGrillScore()
     {
         Destroy(instantiatedGrillPrefab);
         hasGrill = false;
+        isFlipped = false;
         maxGrillScoreReached = false;
         intermediateGrillScoreReached = false;
+        savingGrillScore = false;
 
-        DOTween.Restart("fisrtGrillScoreIncrease");
-        DOTween.Kill("fisrtGrillScoreIncrease");
+        DOTween.Restart("firstGrillScoreIncrease");
+        DOTween.Kill("firstGrillScoreIncrease");
 
         DOTween.Restart("secondGrillScoreIncrease");
         DOTween.Kill("secondGrillScoreIncrease");
 
         DOTween.Kill("grillScoreDecrease");
+        DOTween.Kill("TimeSavingDelay");
 
         grillCurrentScore = 0;
+        currentMaximumScore = 0;
     }
 }

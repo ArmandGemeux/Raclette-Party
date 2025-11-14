@@ -1590,16 +1590,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b818f6f78705b724bb87be95cc0c086f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Grill
-  cookingTime: 10
-  burningTime: 10
-  perfectScoreSavingTime: 10
+  cookingTime: 8
+  burningTime: 3
+  perfectScoreSavingTime: 5
   hasGrill: 0
+  isFlipped: 0
   intermediateGrillScoreReached: 0
   maxGrillScoreReached: 0
+  savingGrillScore: 0
   grillCurrentScore: 0
   grillMinimumScore: 0
-  grillIntermediateScore: 500
-  grillMaximumScore: 500
+  grillIntermediateScore: 250
+  grillMaximumScore: 750
   currentMaximumScore: 0
   grillPrefab: {fileID: 6745167173763799743, guid: fbee26dc6024caf479c6dd798ee30ecf, type: 3}
 --- !u!1 &530107006
