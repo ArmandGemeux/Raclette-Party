@@ -8,11 +8,15 @@ public enum Angle
     Up,
     Forward
 }
+
+
 public class MouseClickCut : MonoBehaviour
 {
     public Angle angle;
 
-    void Update(){
+	public float cutForce;
+
+	void Update(){
 
 		if(Input.GetMouseButtonDown(0)){
 			RaycastHit hit;
@@ -25,17 +29,17 @@ public class MouseClickCut : MonoBehaviour
                    
                     if(angle == Angle.Right)
 					{
-                        Cutter.Cut(victim, hit.point, new Vector3(0.01f,0f,0f));
+                        Cutter.Cut(victim, hit.point, Vector3.right, cutForce);
 
                     }
                     else if (angle == Angle.Up)
                     {
-                        Cutter.Cut(victim, hit.point, Vector3.up);
+                        Cutter.Cut(victim, hit.point, Vector3.up, cutForce);
 
                     }
                     else if (angle == Angle.Forward)
 					{
-						Cutter.Cut(victim, hit.point, Vector3.forward);
+						Cutter.Cut(victim, hit.point, Vector3.forward, cutForce);
 						
 					}
 				}

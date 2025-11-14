@@ -73,7 +73,7 @@ public class DrawCut : MonoBehaviour
             {
                 MeshFilter filter = hit.gameObject.GetComponentInChildren<MeshFilter>();
                 if(filter != null)
-                    Cutter.Cut(hit.gameObject, pointInPlane, cutPlaneNormal);
+                    Cutter.Cut(hit.gameObject, pointInPlane, cutPlaneNormal, Cutter.initialCutForce);
             }
         }
         

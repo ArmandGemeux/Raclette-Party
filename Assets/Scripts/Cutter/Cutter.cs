@@ -5,12 +5,14 @@ public class Cutter : MonoBehaviour
 {
     private static bool isBusy;
     private static Mesh originalMesh;
+    public static float initialCutForce; 
 
-    public static void Cut(GameObject originalGameObject, Vector3 contactPoint, Vector3 cutNormal)
+    public static void Cut(GameObject originalGameObject, Vector3 contactPoint, Vector3 cutNormal, float cutForce)
     {
         if(isBusy)
             return;
 
+        initialCutForce = cutForce;
         isBusy = true;
         
         Plane cutPlane = new Plane(originalGameObject.transform.InverseTransformDirection(-cutNormal), originalGameObject.transform.InverseTransformPoint(contactPoint));
@@ -70,9 +72,10 @@ public class Cutter : MonoBehaviour
         {
             col.convex = true;
         }
-        
+
+        right.tag = "Cuttable";
         var rightRigidbody = right.AddComponent<Rigidbody>();
-        rightRigidbody.AddRelativeForce(-cutPlane.normal * 250f);
+        rightRigidbody.AddRelativeForce(-cutPlane.normal * cutForce);
         
         isBusy = false;
     }
