@@ -23,23 +23,23 @@ public class MouseClickCut : MonoBehaviour
 
 			if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit)){
 
-				GameObject victim = hit.collider.gameObject;
-				if(victim.tag == "Cuttable")
+				GameObject tOCutObject = hit.collider.gameObject;
+				if(tOCutObject.tag == "Cuttable")
 				{
                    
                     if(angle == Angle.Right)
 					{
-                        Cutter.Cut(victim, hit.point, Vector3.right, cutForce);
+                        Cutter.Cut(tOCutObject, hit.point, Vector3.right, cutForce);
 
                     }
                     else if (angle == Angle.Up)
                     {
-                        Cutter.Cut(victim, hit.point, Vector3.up, cutForce);
+                        Cutter.Cut(tOCutObject, hit.point, Vector3.up, cutForce);
 
                     }
                     else if (angle == Angle.Forward)
 					{
-						Cutter.Cut(victim, hit.point, Vector3.forward, cutForce);
+						Cutter.Cut(tOCutObject, hit.point, Vector3.forward, cutForce);
 						
 					}
 				}
