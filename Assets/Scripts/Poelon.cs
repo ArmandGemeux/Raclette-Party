@@ -28,7 +28,10 @@ public class Poelon : MonoBehaviour, IInteractable
 
     public GameObject cheesePrefab;
     private GameObject instantiatedCheesePrefab;
+
     private Vector3 initialPos;
+    private Vector3 initialRot;
+    public Transform movedPosition;
 
     /*[Header("UI & Feedback")]
     public UIManager UIManager;
@@ -45,6 +48,7 @@ public class Poelon : MonoBehaviour, IInteractable
     void Start()
     {
         initialPos = transform.position;
+        initialRot = transform.rotation.eulerAngles;
     }
 
     // Update is called once per frame
@@ -89,7 +93,8 @@ public class Poelon : MonoBehaviour, IInteractable
         UIManager.Instance.SlideInCheeseButtons();
         FeedbackManager.Instance.MoveCameraToMiddlePoelon();
 
-        transform.DOMove(new Vector3(1.02f, 0.45f, 0f), 0.5f);
+        transform.DOMove(movedPosition.position, 0.5f);
+        transform.DORotate(movedPosition.rotation.eulerAngles, 0.5f);
 
         //Draw UI here
 
@@ -110,6 +115,7 @@ public class Poelon : MonoBehaviour, IInteractable
     public void SetInitialPosition()
     {
         transform.DOMove(initialPos, 0.5f);
+        transform.DORotate(initialRot, 0.5f);
     }
 
     public void CheeseBaking()
@@ -119,7 +125,9 @@ public class Poelon : MonoBehaviour, IInteractable
             hasCheese = true;
             instantiatedCheesePrefab = Instantiate(cheesePrefab, gameObject.transform.position, Quaternion.identity);
             instantiatedCheesePrefab.transform.SetParent(gameObject.transform);
-            DOTween.To(() => cheeseCurrentScore, x => cheeseCurrentScore = x, cheeseMaximumScore, cookingTime).SetId("currentScoreIncrease"); ;
+            DOTween.To(() => cheeseCurrentScore, x => cheeseCurrentScore = x, cheeseMaximumScore, cookingTime).SetId("currentScoreIncrease");
+            UIManager.Instance.cheeseGauge.DOFillAmount(1, cookingTime).SetId("CheeseGaugeIncrease");
+            UIManager.Instance.cheeseGauge.DOColor(Color.green, cookingTime);
 
             //ajouter un délai léger ici, pour que les boutons se désactivent hors champ
             UIManager.Instance.cheeseInterface[0].gameObject.SetActive(false);
@@ -143,6 +151,7 @@ public class Poelon : MonoBehaviour, IInteractable
         //GameManager.Instance.InstantiateCheesePrefab();
 
         DOTween.Pause("currentScoreIncrease");
+        DOTween.Pause("CheeseGaugeIncrease");
 
         GameManager.Instance.lookingForCheeseSpot = true;
 
@@ -161,9 +170,19 @@ public class Poelon : MonoBehaviour, IInteractable
         hasCheese = false;
         maxScoreReached = false;
         DOTween.Restart("currentScoreIncrease");
+
         DOTween.Kill("currentScoreIncrease");
         DOTween.Kill("currentScoreDecrease");
 
+        DOTween.Restart("CheeseGaugeIncrease");
+        DOTween.Kill("CheeseGaugeIncrease");
+
+        DOTween.Restart("CheeseGaugeDecrease");
+        DOTween.Kill("CheeseGaugeDecrease");
+
+        //Ajouter reset de couleur
+
+        UIManager.Instance.cheeseGauge.fillAmount = 0f;
         cheeseCurrentScore = 0;
     }
 
@@ -172,6 +191,8 @@ public class Poelon : MonoBehaviour, IInteractable
         savingCheeseScore = false;
         Debug.Log("ça crame wsh");
         DOTween.To(() => cheeseCurrentScore, x => cheeseCurrentScore = x, cheeseMinimumScore, burningTime).SetId("currentScoreDecrease");
+        UIManager.Instance.cheeseGauge.DOFillAmount(0, burningTime).SetId("CheeseGaugeDecrease");
+        UIManager.Instance.cheeseGauge.DOColor(Color.red, burningTime);
     }
 
     private void PerfectCheeseSavingDelay()

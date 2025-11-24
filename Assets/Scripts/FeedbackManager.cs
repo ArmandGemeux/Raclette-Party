@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class FeedbackManager : MonoBehaviour
 {
-
     public static FeedbackManager Instance { get; private set; }
 
 
@@ -13,9 +12,10 @@ public class FeedbackManager : MonoBehaviour
 
     [Space]
     public Transform mainCameraPos;
-    public Transform middlePoelonCamPos;
+    public Transform middleRightCamPos;
     public Transform grillCamPos;
     public Transform plateCamSpot;
+    public Transform cuttingBoardCamPos;
 
     void Awake()
     {
@@ -40,8 +40,8 @@ public class FeedbackManager : MonoBehaviour
     public void MoveCameraToMiddlePoelon()
     {
         Sequence seq = DOTween.Sequence();
-        seq.Append(mainCamera.transform.DOMove(middlePoelonCamPos.position, 0.5f))
-            .Join(mainCamera.transform.DORotate(middlePoelonCamPos.eulerAngles, 0.5f));
+        seq.Append(mainCamera.transform.DOMove(middleRightCamPos.position, 0.5f))
+            .Join(mainCamera.transform.DORotate(middleRightCamPos.eulerAngles, 0.5f));
     }
     public void MoveCameraToGrill()
     {
@@ -54,5 +54,11 @@ public class FeedbackManager : MonoBehaviour
         Sequence seq = DOTween.Sequence();
         seq.Append(mainCamera.transform.DOMove(plateCamSpot.position, 0.5f))
             .Join(mainCamera.transform.DORotate(plateCamSpot.eulerAngles, 0.5f));
+    }
+    public void MoveCameraToCuttingBoard()
+    {
+        Sequence seq = DOTween.Sequence();
+        seq.Append(mainCamera.transform.DOMove(cuttingBoardCamPos.position, 0.5f))
+            .Join(mainCamera.transform.DORotate(cuttingBoardCamPos.eulerAngles, 0.5f));
     }
 }

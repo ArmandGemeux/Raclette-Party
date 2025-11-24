@@ -12,15 +12,18 @@ public class UIManager : MonoBehaviour
     [Header("References Cheese")]
     public TextMeshProUGUI currentCheeseScore;
     public RectTransform[] cheeseInterface;
+    public Image cheeseGauge;
 
     [Header("References Grill")]
     public TextMeshProUGUI currentGrillScore;
     public RectTransform[] grillInterface;
 
+    [Header("References Cutting Board")]
+
     [Space]
     public float slideInDuration = 0.6f;
     public float slideOutDuration = 0.4f;
-    public float delayBetweenButtons = 0.2f;
+    public float delayBetweenButtons = 0.05f;
 
     private Vector2[] cheeseInterfaceTargetPos;
     private Vector2[] grillInterfaceTargetPos;
@@ -54,6 +57,7 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        cheeseGauge.fillAmount = 0f;
         cheeseInterfaceTargetPos = new Vector2[cheeseInterface.Length];
 
         for (int i = 0; i < cheeseInterface.Length; i++)
