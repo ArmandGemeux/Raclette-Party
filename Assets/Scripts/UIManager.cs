@@ -19,11 +19,30 @@ public class UIManager : MonoBehaviour
     public RectTransform[] grillInterface;
 
     [Header("References Cutting Board")]
+    public RectTransform cuttingAmountSliderRT;
+    public RectTransform startCuttingButton;
+    public TextMeshProUGUI cuttingAmountText;
+    public Slider cuttingAmountSlider;
+
+    public int countdown;
+    public bool isCuttingGameStarted;
 
     [Space]
-    public float slideInDuration = 0.6f;
-    public float slideOutDuration = 0.4f;
-    public float delayBetweenButtons = 0.05f;
+
+    public RectTransform spawnArea;     // La zone dans laquelle on spawn (RectTransform dans le WorldSpace Canvas)
+    public RectTransform prefab;        // Ton UI prefab
+    public float margin = 20f;
+    private int cuttingAmount;
+
+    float minX;
+    float maxX;
+    float minY;
+    float maxY;
+
+    [Space]
+    public float slideInDuration = 0.3f;
+    public float slideOutDuration = 0.2f;
+    public float delayBetweenButtons = 0.01f;
 
     private Vector2[] cheeseInterfaceTargetPos;
     private Vector2[] grillInterfaceTargetPos;
@@ -83,6 +102,15 @@ public class UIManager : MonoBehaviour
 
         grillInterface[1].gameObject.SetActive(false);
         grillInterface[2].gameObject.SetActive(false);
+
+        CuttingBoardSetupOff();
+        ButtonSpawnArea();
+    }
+
+    private void Update()
+    {
+        cuttingAmount = (int)cuttingAmountSlider.value;
+        cuttingAmountText.text = cuttingAmountSlider.value.ToString() + (" x");
     }
 
     public void SlideInCheeseButtons()
@@ -127,6 +155,61 @@ public class UIManager : MonoBehaviour
             RectTransform btn = grillInterface[i];
 
             btn.DOAnchorPos(new Vector2(-1500f, grillInterfaceTargetPos[i].y), slideOutDuration).SetEase(Ease.InOutBack).SetDelay(i * delayBetweenButtons);
+        }
+    }
+    public void CuttingBoardSetupOn()
+    {
+        UIOnScreen = true;
+
+        cuttingAmountSliderRT.DOScale(new Vector3(1f, 1f, 1f), 0.5f).SetEase(Ease.OutExpo);
+        startCuttingButton.DOScale(new Vector3(1f, 1f, 1f), 0.5f).SetEase(Ease.OutExpo);
+        cuttingAmountText.GetComponent<RectTransform>().DOScale(new Vector3(1f, 1f, 1f), 0.5f).SetEase(Ease.OutExpo);
+    }
+    public void CuttingBoardSetupOff()
+    {
+        UIOnScreen = false;
+
+        cuttingAmountSliderRT.DOScale(new Vector3(0f, 0f, 0f), 0.5f).SetEase(Ease.OutExpo);
+        startCuttingButton.DOScale(new Vector3(0f, 0f, 0f), 0.5f).SetEase(Ease.OutExpo);
+        cuttingAmountText.GetComponent<RectTransform>().DOScale(new Vector3(0f, 0f, 0f), 0.5f).SetEase(Ease.OutExpo);
+    }
+
+    public void ButtonSpawnArea()
+    {
+        Vector2 size = spawnArea.rect.size;
+
+        minX = -size.x / 2f + margin;
+        maxX = size.x / 2f - margin;
+        minY = -size.y / 2f + margin;
+        maxY = size.y / 2f - margin;
+    }
+
+    public void StartingCuttingChallengeButton()
+    {
+        //Pensez à désactiver le clic sur la cuttingBoard à ce moment là, sinon fait réapparaître les boutons de setup
+        isCuttingGameStarted = true;
+        countdown = cuttingAmount;
+        CuttingBoardSetupOff();
+        CuttingButtonSpawns();
+    }
+
+    public void CuttingButtonSpawns()
+    {
+        if (countdown > 0)
+        {
+            countdown--;
+
+            MouseClickCut.Instance.isCutting = true;
+            Vector2 randomLocalPos = new Vector2(Random.Range(minX, maxX), Random.Range(minY, maxY));
+
+            RectTransform uiInstance = Instantiate(prefab, spawnArea);
+            uiInstance.anchoredPosition = randomLocalPos;
+        }
+        else
+        {
+            isCuttingGameStarted = false;
+            Debug.Log("Mini Jeu terminé");
+            //Envoie le score total des boutons appuyés
         }
     }
 }

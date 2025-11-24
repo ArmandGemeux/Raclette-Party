@@ -1,14 +1,19 @@
 using UnityEngine;
+using DG.Tweening;
+using System.Threading.Tasks;
+using TMPro;
+using UnityEngine.UI;
 
-public class CuttingBoard : MonoBehaviour
+public class CuttingBoard : MonoBehaviour, IInteractable
 {
-    bool isCutting = false;
+    //bool isCutting = false;
 
-    public GameObject[] foodToCutPrefab;
+    public GameObject foodToCutPrefab;
+
 
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -19,14 +24,23 @@ public class CuttingBoard : MonoBehaviour
 
     public void OnInteract()
     {
-        Debug.Log("Click sur la planche à découper");
+        if (UIManager.Instance.isCuttingGameStarted == false)
+        {
+            Debug.Log("Click sur la planche à découper");
 
-        FeedbackManager.Instance.MoveCameraToCuttingBoard();
+            FeedbackManager.Instance.MoveCameraToCuttingBoard();
+            UIManager.Instance.CuttingBoardSetupOn();
+        }
+        else
+        {
+            return;
+        }
     }
 
-    public void CuttingBoardStart()
+    public void DefiningCuttingChallenge()
     {
-        isCutting = true;
+        UIManager.Instance.CuttingBoardSetupOn();
+
         //Instantiate(Un Prefab aléatoire de la liste foodToCutPrefab)
         //UIManager.Instance.CuttingBoardInterface();
 
@@ -40,7 +54,6 @@ public class CuttingBoard : MonoBehaviour
 
     public void ResetCuttingBoard()
     {
-        isCutting = false;
-
+        MouseClickCut.Instance.isCutting = false;
     }
 }

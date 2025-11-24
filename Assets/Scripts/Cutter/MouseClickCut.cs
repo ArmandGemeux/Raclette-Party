@@ -11,14 +11,29 @@ public enum Angle
 
 
 public class MouseClickCut : MonoBehaviour
-{
+{    public static MouseClickCut Instance { get; private set; }
+
     public Angle angle;
 
 	public float cutForce;
 
-	void Update(){
+    public bool isCutting;
+    void Awake()
+    {
+        // Vérifie qu’il n’y a qu’un seul GameManager
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
 
-		if(Input.GetMouseButtonDown(0)){
+        Instance = this;
+        DontDestroyOnLoad(gameObject); // persiste entre les scènes
+    }
+
+    void Update(){
+
+		if(Input.GetMouseButtonDown(0) && isCutting){
 			RaycastHit hit;
 
 			if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit)){
