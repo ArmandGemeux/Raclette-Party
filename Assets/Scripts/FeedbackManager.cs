@@ -12,7 +12,7 @@ public class FeedbackManager : MonoBehaviour
 
     [Space]
     public Transform mainCameraPos;
-    public Transform middleRightCamPos;
+    //public Transform middleRightCamPos;
     public Transform grillCamPos;
     public Transform plateCamSpot;
     public Transform cuttingBoardCamPos;
@@ -37,11 +37,11 @@ public class FeedbackManager : MonoBehaviour
             .Join(mainCamera.transform.DORotate(mainCameraPos.eulerAngles, 0.5f));
     }
 
-    public void MoveCameraToMiddlePoelon()
+    public void MoveCameraToPoelon(Transform poelonCamPos)
     {
         Sequence seq = DOTween.Sequence();
-        seq.Append(mainCamera.transform.DOMove(middleRightCamPos.position, 0.5f))
-            .Join(mainCamera.transform.DORotate(middleRightCamPos.eulerAngles, 0.5f));
+        seq.Append(mainCamera.transform.DOMove(poelonCamPos.position, 0.5f))
+            .Join(mainCamera.transform.DORotate(poelonCamPos.eulerAngles, 0.5f));
     }
     public void MoveCameraToGrill()
     {

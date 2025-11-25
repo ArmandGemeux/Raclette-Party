@@ -32,6 +32,9 @@ public class Poelon : MonoBehaviour, IInteractable
     private Vector3 initialPos;
     private Vector3 initialRot;
     public Transform movedPosition;
+    public Transform cameraPosition;
+    public RectTransform[] cheeseInterface;
+    private Vector2[] cheeseInterfaceTargetPos;
 
     /*[Header("UI & Feedback")]
     public UIManager UIManager;
@@ -49,6 +52,18 @@ public class Poelon : MonoBehaviour, IInteractable
     {
         initialPos = transform.position;
         initialRot = transform.rotation.eulerAngles;
+
+        cheeseInterfaceTargetPos = new Vector2[cheeseInterface.Length];
+
+        for (int i = 0; i < cheeseInterface.Length; i++)
+        {
+            RectTransform btn = cheeseInterface[i];
+
+            cheeseInterfaceTargetPos[i] = btn.anchoredPosition;
+            btn.anchoredPosition = new Vector2(-1500f, cheeseInterfaceTargetPos[i].y);
+        }
+
+        cheeseInterface[1].gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -60,7 +75,7 @@ public class Poelon : MonoBehaviour, IInteractable
             PerfectCheeseSavingDelay();
         }
 
-        UIManager.Instance.currentCheeseScore.text = cheeseCurrentScore.ToString();
+        //UIManager.Instance.currentCheeseScore.text = cheeseCurrentScore.ToString();
 
         /*if (hasCheese == true && maxScoreReached == false)
         {
@@ -90,8 +105,8 @@ public class Poelon : MonoBehaviour, IInteractable
 
         //Feedbacks à déplacer dans un Feedback Manager (récupérer position du poélon) ?
 
-        UIManager.Instance.SlideInCheeseButtons();
-        FeedbackManager.Instance.MoveCameraToMiddlePoelon();
+        UIManager.Instance.SlideInCheeseButtons(cheeseInterface, cheeseInterfaceTargetPos);
+        FeedbackManager.Instance.MoveCameraToPoelon(cameraPosition);
 
         transform.DOMove(movedPosition.position, 0.5f);
         transform.DORotate(movedPosition.rotation.eulerAngles, 0.5f);
@@ -130,8 +145,8 @@ public class Poelon : MonoBehaviour, IInteractable
             UIManager.Instance.cheeseGauge.DOColor(Color.green, cookingTime);
 
             //ajouter un délai léger ici, pour que les boutons se désactivent hors champ
-            UIManager.Instance.cheeseInterface[0].gameObject.SetActive(false);
-            UIManager.Instance.cheeseInterface[1].gameObject.SetActive(true);
+            cheeseInterface[0].gameObject.SetActive(false);
+            cheeseInterface[1].gameObject.SetActive(true);
 
             //AddCheeseButton == Desactivé, on active juste l'autre
 
@@ -155,13 +170,15 @@ public class Poelon : MonoBehaviour, IInteractable
 
         GameManager.Instance.lookingForCheeseSpot = true;
 
-        GameManager.Instance.GetCheeseData(cheeseCurrentScore);
+        GameManager.Instance.GetPoelonRef(gameObject.GetComponent<Poelon>());
+
+        GameManager.Instance.AddToScore(cheeseCurrentScore); ;
 
         FeedbackManager.Instance.MoveCameraToPlate();
         UIManager.Instance.SlideOutCheeseButtons();
 
-        UIManager.Instance.cheeseInterface[0].gameObject.SetActive(true);
-        UIManager.Instance.cheeseInterface[1].gameObject.SetActive(false);
+        cheeseInterface[0].gameObject.SetActive(true);
+        cheeseInterface[1].gameObject.SetActive(false);
     }
 
     public void ResetCheeseScore()

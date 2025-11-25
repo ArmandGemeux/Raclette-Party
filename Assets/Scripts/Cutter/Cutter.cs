@@ -76,7 +76,10 @@ public class Cutter : MonoBehaviour
         right.tag = "Cuttable";
         var rightRigidbody = right.AddComponent<Rigidbody>();
         rightRigidbody.AddRelativeForce(-cutPlane.normal * cutForce);
-        
+
+        right.layer = LayerMask.NameToLayer("CuttedPartLayer");
+        originalGameObject.layer = LayerMask.NameToLayer("CuttedPartLayer");
+
         isBusy = false;
     }
 

@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 
     public Vector3[] plateSpots;
 
-    public int spotsScore;
+    public int totalScore;
 
     public GameObject cheesePrefab;
     public GameObject grillPrefab;
@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
     public Camera mainCamera;
     public float maxDistance = 100f;
     public LayerMask interactableLayer;
+
+    private Poelon currentPoelon;
     void Awake()
     {
         // Vérifie qu’il n’y a qu’un seul GameManager
@@ -70,7 +72,8 @@ public class GameManager : MonoBehaviour
         Instantiate(cheesePrefab, instantiationPos, Quaternion.identity);
         lookingForCheeseSpot = false;
 
-        poelon.ResetCheeseScore();
+        currentPoelon.ResetCheeseScore();
+        currentPoelon = null;
 
         Debug.Log("Fromage dans l'assiette !");
     }
@@ -132,6 +135,12 @@ public class GameManager : MonoBehaviour
             //Debug.Log("No object hit.");
         }
     }
+
+    public void GetPoelonRef(Poelon poelon)
+    {
+        currentPoelon = poelon;
+    }
+
     public void LookForGrillSpot()
     {
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
@@ -150,14 +159,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void GetCheeseData(int scoreReceived)
+    public void AddToScore(int scoreReceived)
     {
-        spotsScore += scoreReceived;
-    }
-
-    public void GetGrillData(int scoreReceived)
-    {
-        spotsScore += scoreReceived;
+        totalScore += scoreReceived;
     }
 }
 

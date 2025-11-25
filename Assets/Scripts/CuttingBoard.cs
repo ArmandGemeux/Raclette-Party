@@ -52,8 +52,9 @@ public class CuttingBoard : MonoBehaviour, IInteractable
         */
     }
 
-    public void ResetCuttingBoard()
+    public void InstantiateFoodToCut()
     {
-        MouseClickCut.Instance.isCutting = false;
+        GameObject go = Instantiate(foodToCutPrefab, new Vector3(9.85f, 15.55f, -2.9f), Quaternion.Euler(90f,0,-75));
+        go.transform.DOScale(new Vector3(166, 166, 166), 0.1f);
     }
 }

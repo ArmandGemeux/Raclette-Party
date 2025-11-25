@@ -2,20 +2,20 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
 
-    public TextMeshProUGUI currentPlateScore;
+    public TextMeshProUGUI totalScore;
 
     [Header("References Cheese")]
-    public TextMeshProUGUI currentCheeseScore;
-    public RectTransform[] cheeseInterface;
+    //public RectTransform[] cheeseInterface;
     public Image cheeseGauge;
+    public RectTransform[] wholeCheeseInterface;
 
     [Header("References Grill")]
-    public TextMeshProUGUI currentGrillScore;
     public RectTransform[] grillInterface;
 
     [Header("References Cutting Board")]
@@ -24,6 +24,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI cuttingAmountText;
     public Slider cuttingAmountSlider;
 
+    [Space]
     public int countdown;
     public bool isCuttingGameStarted;
 
@@ -33,6 +34,8 @@ public class UIManager : MonoBehaviour
     public RectTransform prefab;        // Ton UI prefab
     public float margin = 20f;
     private int cuttingAmount;
+
+    public Transform parent;
 
     float minX;
     float maxX;
@@ -52,9 +55,7 @@ public class UIManager : MonoBehaviour
     public Camera mainCamera;
 
     [Space]
-    public Transform mainCameraPos;
-    public Transform middlePoelonCamPos;
-    public Transform grillCamPos;
+    public Poelon[] myPoelons;
 
     //public Camera leftPoelonCamera;
     //public Camera rightPoelonCamera;
@@ -76,19 +77,7 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        cheeseGauge.fillAmount = 0f;
-        cheeseInterfaceTargetPos = new Vector2[cheeseInterface.Length];
-
-        for (int i = 0; i < cheeseInterface.Length; i++)
-        {
-            RectTransform btn = cheeseInterface[i];
-
-            cheeseInterfaceTargetPos[i] = btn.anchoredPosition;
-            btn.anchoredPosition = new Vector2(-1500f, cheeseInterfaceTargetPos[i].y);
-        }
-
-        cheeseInterface[1].gameObject.SetActive(false);
-
+        //cheeseGauge.fillAmount = 0f;
 
         grillInterfaceTargetPos = new Vector2[grillInterface.Length];
 
@@ -113,7 +102,7 @@ public class UIManager : MonoBehaviour
         cuttingAmountText.text = cuttingAmountSlider.value.ToString() + (" x");
     }
 
-    public void SlideInCheeseButtons()
+    public void SlideInCheeseButtons(RectTransform[] cheeseInterface, Vector2[] cheeseInterfaceTargetPos)
     {
         UIOnScreen = true;
 
@@ -128,13 +117,26 @@ public class UIManager : MonoBehaviour
     {
         UIOnScreen = false;
 
-        for (int i = 0; i < cheeseInterface.Length; i++)
-        {
-            RectTransform btn = cheeseInterface[i];
 
+        cheeseInterfaceTargetPos = new Vector2[wholeCheeseInterface.Length];
+
+        for (int i = 0; i < wholeCheeseInterface.Length; i++)
+        {
+            RectTransform btn = wholeCheeseInterface[i];
+
+            cheeseInterfaceTargetPos[i] = btn.anchoredPosition;
             btn.DOAnchorPos(new Vector2(-1500f, cheeseInterfaceTargetPos[i].y), slideOutDuration).SetEase(Ease.InOutBack).SetDelay(i * delayBetweenButtons);
         }
     }
+
+    public void SetPoelonToOriginalPosition()
+    {
+        foreach (Poelon poelon in myPoelons)
+        {
+            poelon.SetInitialPosition();
+        }
+    }
+
     public void SlideInGrillButtons()
     {
         UIOnScreen = true;
@@ -197,17 +199,36 @@ public class UIManager : MonoBehaviour
     {
         if (countdown > 0)
         {
-            countdown--;
-
             MouseClickCut.Instance.isCutting = true;
             Vector2 randomLocalPos = new Vector2(Random.Range(minX, maxX), Random.Range(minY, maxY));
 
             RectTransform uiInstance = Instantiate(prefab, spawnArea);
             uiInstance.anchoredPosition = randomLocalPos;
+
+            countdown--;
         }
         else
         {
+            MouseClickCut.Instance.isCutting = false;
             isCuttingGameStarted = false;
+
+            CuttingBoardSetupOn();
+
+            int targetLayer = LayerMask.NameToLayer("CuttedPartLayer");
+
+            foreach (GameObject go in GameObject.FindObjectsOfType<GameObject>())
+            {
+                if (go.layer == targetLayer)
+                {
+                    go.transform.SetParent(parent);
+                }
+            }
+
+            foreach (Transform child in parent)
+            {
+                child.gameObject.SetActive(false);
+            }
+
             Debug.Log("Mini Jeu terminé");
             //Envoie le score total des boutons appuyés
         }

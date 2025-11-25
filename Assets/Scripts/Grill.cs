@@ -124,7 +124,7 @@ public class Grill : MonoBehaviour, IInteractable
 
         GameManager.Instance.lookingForGrillSpot = true;
 
-        GameManager.Instance.GetGrillData(grillCurrentScore);
+        GameManager.Instance.AddToScore(grillCurrentScore);
 
         FeedbackManager.Instance.MoveCameraToPlate();
         UIManager.Instance.SlideOutGrillButtons();
