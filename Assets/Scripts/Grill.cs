@@ -28,13 +28,17 @@ public class Grill : MonoBehaviour, IInteractable
     public int grillMaximumScore;
     public int currentMaximumScore;
 
+    public Image grillGauge;
     public GameObject grillPrefab;
+    public Transform grillPrefabPos;
     private GameObject instantiatedGrillPrefab;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        grillGauge.GetComponent<RectTransform>().localScale = new Vector3(0, 0, 0);
+        grillGauge.fillAmount = 0f;
+        grillGauge.color = Color.darkRed;
     }
 
     // Update is called once per frame
@@ -65,9 +69,21 @@ public class Grill : MonoBehaviour, IInteractable
         if (hasGrill == false)
         {
             hasGrill = true;
-            instantiatedGrillPrefab = Instantiate(grillPrefab, gameObject.transform.position, Quaternion.identity);
+
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.meat);
+            instantiatedGrillPrefab = Instantiate(grillPrefab, grillPrefabPos.position, Quaternion.identity);
             //instantiatedCheesePrefab.transform.SetParent(gameObject.transform);
             DOTween.To(() => grillCurrentScore, x => grillCurrentScore = x, grillIntermediateScore, cookingTime).SetId("firstGrillScoreIncrease"); ;
+
+            Sequence seq = DOTween.Sequence();
+
+            seq.Append((grillGauge.GetComponent<RectTransform>().DOScale(1f, 0.15f)))
+               .Join(grillGauge.DOFillAmount(1, cookingTime).SetEase(Ease.InQuad))
+               .OnComplete(() =>
+               {
+                   grillGauge.fillAmount = 1f;
+               })
+               .Join(grillGauge.DOColor(Color.yellowGreen, cookingTime).SetEase(Ease.InQuad)).SetId("firstGrillGauge");
 
             //ajouter un délai léger ici, pour que les boutons se désactivent hors champ
             UIManager.Instance.grillInterface[0].gameObject.SetActive(false);
@@ -92,6 +108,22 @@ public class Grill : MonoBehaviour, IInteractable
             DOTween.Pause("firstGrillScoreDecrease");
             DOTween.Restart("TimeSavingDelay");
             DOTween.Pause("TimeSavingDelay");
+
+            DOTween.Kill("firstGrillGauge");
+            DOTween.Kill("grillGaugeSaving");
+
+            grillGauge.fillAmount = 0f;
+            grillGauge.color = Color.darkRed;
+
+            Sequence seq = DOTween.Sequence();
+
+            seq.Append((grillGauge.GetComponent<RectTransform>().DOScale(1f, 0.15f)))
+               .Join(grillGauge.DOFillAmount(1, cookingTime).SetEase(Ease.InQuad))
+               .OnComplete(() =>
+               {
+                   grillGauge.fillAmount = 1f;
+               })
+               .Join(grillGauge.DOColor(Color.yellowGreen, cookingTime).SetEase(Ease.InQuad)).SetId("secondGrillGauge");
 
             //Trouver logique pour additionner la valeur au currentScore plutôt que de l'y emmener
 
@@ -122,12 +154,11 @@ public class Grill : MonoBehaviour, IInteractable
         DOTween.Pause("firstGrillScoreDecrease");
         DOTween.Pause("secondGrillScoreDecrease");
 
-        GameManager.Instance.lookingForGrillSpot = true;
-
         GameManager.Instance.AddToScore(grillCurrentScore);
-
-        FeedbackManager.Instance.MoveCameraToPlate();
         UIManager.Instance.SlideOutGrillButtons();
+        FeedbackManager.Instance.MoveCameraToInitialPosition();
+
+        ResetGrillScore();
 
         UIManager.Instance.grillInterface[0].gameObject.SetActive(true);
         UIManager.Instance.grillInterface[1].gameObject.SetActive(false);
@@ -138,6 +169,14 @@ public class Grill : MonoBehaviour, IInteractable
     {
         if (intermediateGrillScoreReached && savingGrillScore)
         {
+            DOTween.Kill("grillGaugeSaving");
+
+            Sequence seq = DOTween.Sequence();
+
+            seq.Append((grillGauge.GetComponent<RectTransform>().DOScale(1f, 0.3f)))
+               .Join(grillGauge.DOFillAmount(0, burningTime).SetEase(Ease.InQuad))
+               .Join(grillGauge.DOColor(Color.darkRed, burningTime).SetEase(Ease.InQuad)).SetId("firstGrillBurningGauge");
+
             savingGrillScore = false;
             Debug.Log("ça crame 1er du nom");
             DOTween.To(() => grillCurrentScore, x => grillCurrentScore = x, grillMinimumScore, burningTime).SetId("firstGrillScoreDecrease");
@@ -152,6 +191,14 @@ public class Grill : MonoBehaviour, IInteractable
     {
         if (maxGrillScoreReached && savingGrillScore)
         {
+            DOTween.Kill("2ndGrillGaugeSaving");
+
+            Sequence seq = DOTween.Sequence();
+
+            seq.Append((grillGauge.GetComponent<RectTransform>().DOScale(1f, 0.3f)))
+               .Join(grillGauge.DOFillAmount(0, burningTime).SetEase(Ease.InQuad))
+               .Join(grillGauge.DOColor(Color.darkRed, burningTime).SetEase(Ease.InQuad)).SetId("secondGrillBurningGauge");
+
             savingGrillScore = false;
             Debug.Log("ça crame 2eme du nom");
             DOTween.To(() => grillCurrentScore, x => grillCurrentScore = x, grillMinimumScore, burningTime).SetId("secondGrillScoreDecrease");
@@ -166,6 +213,9 @@ public class Grill : MonoBehaviour, IInteractable
     {
         savingGrillScore = true;
         DOTween.Pause("firstGrillScoreIncrease");
+
+        grillGauge.GetComponent<RectTransform>().DOScale(1.3f, 0.3f).SetLoops(-1, LoopType.Yoyo).SetId("grillGaugeSaving");
+
         /*float timer = 0f;
         DOTween.To(() => timer, x => timer = x, perfectScoreSavingTime, perfectScoreSavingTime); //Ajouter un délai ici*/
         Debug.Log("On lance le timer de sauvegarde n°1");
@@ -177,6 +227,8 @@ public class Grill : MonoBehaviour, IInteractable
     }
     private void MaxPerfectGrillSavingDelay()
     {
+        grillGauge.GetComponent<RectTransform>().DOScale(1.3f, 0.3f).SetLoops(-1, LoopType.Yoyo).SetId("2ndGrillGaugeSaving");
+
         savingGrillScore = true;
         DOTween.Pause("firstGrillScoreIncrease");
         DOTween.Pause("secondGrillScoreIncrease");
@@ -207,6 +259,18 @@ public class Grill : MonoBehaviour, IInteractable
 
         DOTween.Kill("grillScoreDecrease");
         DOTween.Kill("TimeSavingDelay");
+
+        DOTween.Kill("firstGrillGauge");
+        DOTween.Kill("secondGrillGauge");
+
+        DOTween.Kill("firstGrillBurningGauge");
+        DOTween.Kill("secondGrillBurningGauge");
+
+        DOTween.Kill("2ndGrillGaugeSaving");
+        DOTween.Kill("grillGaugeSaving");
+
+        Sequence seq = DOTween.Sequence();
+        seq.Append((grillGauge.GetComponent<RectTransform>().DOScale(0f, 0f))).Join(grillGauge.DOFillAmount(0f, 0f)).Join(grillGauge.DOColor(Color.darkRed, 0f));
 
         grillCurrentScore = 0;
         currentMaximumScore = 0;

@@ -17,6 +17,10 @@ public class FeedbackManager : MonoBehaviour
     public Transform plateCamSpot;
     public Transform cuttingBoardCamPos;
 
+    public float cameraShakeForce;
+    public float cameraShakeDuration;
+    public int cameraShakeVibrato;
+
     void Awake()
     {
         // Vérifie qu’il n’y a qu’un seul GameManager
@@ -49,16 +53,23 @@ public class FeedbackManager : MonoBehaviour
         seq.Append(mainCamera.transform.DOMove(grillCamPos.position, 0.5f))
             .Join(mainCamera.transform.DORotate(grillCamPos.eulerAngles, 0.5f));
     }
-    public void MoveCameraToPlate()
+
+    /*public void MoveCameraToPlate()
     {
         Sequence seq = DOTween.Sequence();
         seq.Append(mainCamera.transform.DOMove(plateCamSpot.position, 0.5f))
             .Join(mainCamera.transform.DORotate(plateCamSpot.eulerAngles, 0.5f));
-    }
+    }*/
+
     public void MoveCameraToCuttingBoard()
     {
         Sequence seq = DOTween.Sequence();
         seq.Append(mainCamera.transform.DOMove(cuttingBoardCamPos.position, 0.5f))
             .Join(mainCamera.transform.DORotate(cuttingBoardCamPos.eulerAngles, 0.5f));
+    }
+
+    public void shakeCamera()
+    {
+        mainCamera.DOShakePosition(cameraShakeDuration, cameraShakeForce, cameraShakeVibrato, 90, true);
     }
 }

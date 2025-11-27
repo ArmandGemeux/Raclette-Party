@@ -33,6 +33,7 @@ public class CuttingButton : MonoBehaviour, IPointerDownHandler
         DOTween.Pause("SequenceBoutton");
         scoreOnClick = (int)(jaugeImage.fillAmount * maximumScore);
         GameManager.Instance.AddToScore(scoreOnClick);
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.cut);
 
         gameObject.transform.DOScale(new Vector3(0, 0, 0), .2f).SetEase(Ease.InOutQuart).OnComplete(() => {
             UIManager.Instance.CuttingButtonSpawns();

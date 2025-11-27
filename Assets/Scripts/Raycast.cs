@@ -9,7 +9,7 @@ public class Raycast : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) // clic gauche
+        if (Input.GetMouseButtonDown(0) && GameManager.Instance.gameStarted) // clic gauche
         {
             CastRay();
         }

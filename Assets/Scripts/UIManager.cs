@@ -21,6 +21,7 @@ public class UIManager : MonoBehaviour
     [Header("References Cutting Board")]
     public RectTransform cuttingAmountSliderRT;
     public RectTransform startCuttingButton;
+    public RectTransform returnCuttingButton;
     public TextMeshProUGUI cuttingAmountText;
     public Slider cuttingAmountSlider;
 
@@ -47,15 +48,14 @@ public class UIManager : MonoBehaviour
     public float slideOutDuration = 0.2f;
     public float delayBetweenButtons = 0.01f;
 
-    private Vector2[] cheeseInterfaceTargetPos;
-    private Vector2[] grillInterfaceTargetPos;
-
     public bool UIOnScreen;
 
     public Camera mainCamera;
+    public Poelon[] poelons;
 
-    [Space]
-    public Poelon[] myPoelons;
+    [Header("References Opening Menu")]
+    public Image menuBackground;
+    public RectTransform[] menuInterface;
 
     //public Camera leftPoelonCamera;
     //public Camera rightPoelonCamera;
@@ -79,19 +79,10 @@ public class UIManager : MonoBehaviour
     {
         //cheeseGauge.fillAmount = 0f;
 
-        grillInterfaceTargetPos = new Vector2[grillInterface.Length];
-
-        for (int i = 0; i < grillInterface.Length; i++)
-        {
-            RectTransform btn = grillInterface[i];
-
-            grillInterfaceTargetPos[i] = btn.anchoredPosition;
-            btn.anchoredPosition = new Vector2(-1500f, grillInterfaceTargetPos[i].y);
-        }
-
         grillInterface[1].gameObject.SetActive(false);
         grillInterface[2].gameObject.SetActive(false);
 
+        SlideOutGrillButtons();
         CuttingBoardSetupOff();
         ButtonSpawnArea();
     }
@@ -108,30 +99,24 @@ public class UIManager : MonoBehaviour
 
         for (int i = 0; i < cheeseInterface.Length; i++)
         {
-            RectTransform btn = cheeseInterface[i];
-
-            btn.DOAnchorPos(cheeseInterfaceTargetPos[i], slideInDuration).SetEase(Ease.OutBack).SetDelay(i * delayBetweenButtons);
+            RectTransform btn = cheeseInterface[i].GetComponent<RectTransform>();
+            btn.DOScale(new Vector3(1f, 1f, 1f), 0.5f).SetEase(Ease.OutExpo);
         }
     }
     public void SlideOutCheeseButtons()
     {
         UIOnScreen = false;
 
-
-        cheeseInterfaceTargetPos = new Vector2[wholeCheeseInterface.Length];
-
         for (int i = 0; i < wholeCheeseInterface.Length; i++)
         {
-            RectTransform btn = wholeCheeseInterface[i];
-
-            cheeseInterfaceTargetPos[i] = btn.anchoredPosition;
-            btn.DOAnchorPos(new Vector2(-1500f, cheeseInterfaceTargetPos[i].y), slideOutDuration).SetEase(Ease.InOutBack).SetDelay(i * delayBetweenButtons);
+            RectTransform btn = wholeCheeseInterface[i].GetComponent<RectTransform>();
+            btn.DOScale(new Vector3(0f, 0f, 0f), 0.5f).SetEase(Ease.OutExpo);
         }
     }
 
     public void SetPoelonToOriginalPosition()
     {
-        foreach (Poelon poelon in myPoelons)
+        foreach (Poelon poelon in poelons)
         {
             poelon.SetInitialPosition();
         }
@@ -145,7 +130,7 @@ public class UIManager : MonoBehaviour
         {
             RectTransform btn = grillInterface[i];
 
-            btn.DOAnchorPos(grillInterfaceTargetPos[i], slideInDuration).SetEase(Ease.OutBack).SetDelay(i * delayBetweenButtons);
+            btn.DOScale(new Vector3(1f, 1f, 1f), 0.5f).SetEase(Ease.OutExpo);
         }
     }
     public void SlideOutGrillButtons()
@@ -156,7 +141,7 @@ public class UIManager : MonoBehaviour
         {
             RectTransform btn = grillInterface[i];
 
-            btn.DOAnchorPos(new Vector2(-1500f, grillInterfaceTargetPos[i].y), slideOutDuration).SetEase(Ease.InOutBack).SetDelay(i * delayBetweenButtons);
+            btn.DOScale(new Vector3(0f, 0f, 0f), 0.5f).SetEase(Ease.OutExpo);
         }
     }
     public void CuttingBoardSetupOn()
@@ -165,6 +150,7 @@ public class UIManager : MonoBehaviour
 
         cuttingAmountSliderRT.DOScale(new Vector3(1f, 1f, 1f), 0.5f).SetEase(Ease.OutExpo);
         startCuttingButton.DOScale(new Vector3(1f, 1f, 1f), 0.5f).SetEase(Ease.OutExpo);
+        returnCuttingButton.DOScale(new Vector3(1f, 1f, 1f), 0.5f).SetEase(Ease.OutExpo);
         cuttingAmountText.GetComponent<RectTransform>().DOScale(new Vector3(1f, 1f, 1f), 0.5f).SetEase(Ease.OutExpo);
     }
     public void CuttingBoardSetupOff()
@@ -173,6 +159,7 @@ public class UIManager : MonoBehaviour
 
         cuttingAmountSliderRT.DOScale(new Vector3(0f, 0f, 0f), 0.5f).SetEase(Ease.OutExpo);
         startCuttingButton.DOScale(new Vector3(0f, 0f, 0f), 0.5f).SetEase(Ease.OutExpo);
+        returnCuttingButton.DOScale(new Vector3(0f, 0f, 0f), 0.5f).SetEase(Ease.OutExpo);
         cuttingAmountText.GetComponent<RectTransform>().DOScale(new Vector3(0f, 0f, 0f), 0.5f).SetEase(Ease.OutExpo);
     }
 
@@ -226,11 +213,28 @@ public class UIManager : MonoBehaviour
 
             foreach (Transform child in parent)
             {
-                child.gameObject.SetActive(false);
+                child.gameObject.transform.DOScale(new Vector3(0, 0, 0), .2f).SetEase(Ease.InOutQuart).OnComplete(() => {
+                    child.gameObject.SetActive(false);
+                });
             }
 
             Debug.Log("Mini Jeu terminé");
             //Envoie le score total des boutons appuyés
+        }
+    }
+
+    public void OpenGameScreen()
+    {
+        menuBackground.DOFade(0f, 0.15f).OnComplete(() => {
+            menuBackground.gameObject.SetActive(false);
+        });
+
+        for (int i = 0; i < menuInterface.Length; i++)
+        {
+            RectTransform btn = menuInterface[i];
+            btn.DOScale(0f, 0.3f).SetEase(Ease.InOutBack).SetDelay(0.1f).OnComplete(() => {
+                btn.gameObject.SetActive(false);
+            });
         }
     }
 }

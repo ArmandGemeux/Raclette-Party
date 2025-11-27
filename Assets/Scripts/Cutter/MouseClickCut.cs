@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public enum Angle
 {
@@ -45,6 +46,7 @@ public class MouseClickCut : MonoBehaviour
                     if(angle == Angle.Right)
 					{
                         Cutter.Cut(tOCutObject, hit.point, Vector3.right, cutForce);
+                        FeedbackManager.Instance.shakeCamera();
 
                     }
                     else if (angle == Angle.Up)

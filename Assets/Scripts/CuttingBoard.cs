@@ -9,7 +9,7 @@ public class CuttingBoard : MonoBehaviour, IInteractable
     //bool isCutting = false;
 
     public GameObject foodToCutPrefab;
-
+    public Transform spawnPosition;
 
     void Start()
     {
@@ -48,13 +48,13 @@ public class CuttingBoard : MonoBehaviour, IInteractable
         Un rond apparaît (opacité >> et scale >> jusqu'à être parfaitement visible, plutôt rapidement)
         Une fois présent, le rond se remplit (jauge comme la cuisson) rapidement, il faut appuyer dessus quand la jauge est pleine (ou avant, mais moins bon score)
         Score obtenu = maxPossibleScore * fillAmount (entre 0 et 1) arrondi en Int (ex : si score max = 100, 0.3 fill amout au clic = 30 points)
-        Si le bouton n'est pas appuyé quand la jauge est pleine : timer de sauvegarde (très court, challenge), si timer de sauvegarde à 0, score = 0;
+        Si le bouton n'est pas appuyé quand la jauge est pleine : timer de sauvegarde (très court, challenge), si timer de sauvegarde à 0, score = 0; 4.25  15.89 -3.16
         */
     }
 
     public void InstantiateFoodToCut()
     {
-        GameObject go = Instantiate(foodToCutPrefab, new Vector3(9.85f, 15.55f, -2.9f), Quaternion.Euler(90f,0,-75));
+        GameObject go = Instantiate(foodToCutPrefab, spawnPosition.position, Quaternion.Euler(90f,0,-75));
         go.transform.DOScale(new Vector3(166, 166, 166), 0.1f);
     }
 }

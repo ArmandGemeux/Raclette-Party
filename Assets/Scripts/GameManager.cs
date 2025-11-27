@@ -2,10 +2,16 @@ using DG.Tweening;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+
+    [Header("Game Parameters")]
+    public float remainingTime;
+    public bool gameStarted;
+    public TextMeshProUGUI remainingTimeText;
 
     public Vector3[] plateSpots;
 
@@ -13,9 +19,6 @@ public class GameManager : MonoBehaviour
 
     public GameObject cheesePrefab;
     public GameObject grillPrefab;
-
-    public bool lookingForCheeseSpot = false;
-    public bool lookingForGrillSpot = false;
 
     [Header("FoodMakers")]
     public Poelon poelon;
@@ -51,40 +54,24 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && lookingForCheeseSpot == false && lookingForGrillSpot == false) // clic gauche
+        if (Input.GetMouseButtonDown(0)) // clic gauche
         {
             CastRay();
         }
-        else if (Input.GetMouseButtonDown(0) && lookingForCheeseSpot)
+
+        if (gameStarted)
         {
-            LookForCheeseSpot();
-        }
-        else if (Input.GetMouseButtonDown(0) && lookingForGrillSpot)
-        {
-            LookForGrillSpot();
+            remainingTime -= Time.deltaTime;
+            int minutes = Mathf.FloorToInt(remainingTime / 60);
+            int seconds = Mathf.FloorToInt(remainingTime % 60);
+            remainingTimeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
         }
 
+        if (remainingTime <= 0)
+        {
+            GameEnding();
+        }
         //UIManager.Instance.currentPlateScore.text = spotsScore.ToString();
-    }
-
-    public void InstantiateCheesePrefab(Vector3 instantiationPos)
-    {
-        Instantiate(cheesePrefab, instantiationPos, Quaternion.identity);
-        lookingForCheeseSpot = false;
-
-        currentPoelon.ResetCheeseScore();
-        currentPoelon = null;
-
-        Debug.Log("Fromage dans l'assiette !");
-    }
-    public void InstantiateGrillPrefab(Vector3 instantiationPos)
-    {
-        Instantiate(grillPrefab, instantiationPos, Quaternion.identity);
-        lookingForGrillSpot = false;
-
-        grill.ResetGrillScore();
-
-        Debug.Log("Viande dans l'assiette !");
     }
 
     void CastRay()
@@ -118,50 +105,31 @@ public class GameManager : MonoBehaviour
             return;
         }
     }
-    public void LookForCheeseSpot()
-    {
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, maxDistance, interactableLayer))
-        {
-            //Debug.Log($"Hit: {hitInfo.collider.name} at {hitInfo.point}");
-
-            var interactable = hitInfo.collider.GetComponent<Transform>();
-            InstantiateCheesePrefab(interactable.position);
-            FeedbackManager.Instance.MoveCameraToInitialPosition();
-        }
-        else
-        {
-            //Debug.Log("No object hit.");
-        }
-    }
 
     public void GetPoelonRef(Poelon poelon)
     {
         currentPoelon = poelon;
     }
 
-    public void LookForGrillSpot()
-    {
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, maxDistance, interactableLayer))
-        {
-            //Debug.Log($"Hit: {hitInfo.collider.name} at {hitInfo.point}");
-
-            var interactable = hitInfo.collider.GetComponent<Transform>();
-            InstantiateGrillPrefab(interactable.position);
-            FeedbackManager.Instance.MoveCameraToInitialPosition();
-        }
-        else
-        {
-            //Debug.Log("No object hit.");
-        }
-    }
 
     public void AddToScore(int scoreReceived)
     {
         totalScore += scoreReceived;
+    }
+
+    public void GameEnding()
+    {
+        gameStarted = false;
+    }
+
+    public void StartGame()
+    {
+        gameStarted = true;
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }
 
