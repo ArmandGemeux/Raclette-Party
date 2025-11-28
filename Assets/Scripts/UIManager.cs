@@ -24,6 +24,7 @@ public class UIManager : MonoBehaviour
     public RectTransform returnCuttingButton;
     public TextMeshProUGUI cuttingAmountText;
     public Slider cuttingAmountSlider;
+    public TextMeshProUGUI cuttingGameEndText;
 
     [Space]
     public int countdown;
@@ -57,6 +58,10 @@ public class UIManager : MonoBehaviour
     public Image menuBackground;
     public RectTransform[] menuInterface;
 
+    [Header("References Ending Menu")]
+    public RectTransform[] endingInterface;
+    public GameObject menuParent;
+
     //public Camera leftPoelonCamera;
     //public Camera rightPoelonCamera;
 
@@ -77,10 +82,20 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        menuParent.SetActive(true);
+
         //cheeseGauge.fillAmount = 0f;
+        for (int i = 0; i < endingInterface.Length; i++)
+        {
+            RectTransform btn = endingInterface[i];
+            btn.gameObject.SetActive(false);
+            btn.DOScale(0f, 0f);
+        }
 
         grillInterface[1].gameObject.SetActive(false);
         grillInterface[2].gameObject.SetActive(false);
+
+        cuttingGameEndText.rectTransform.DOScale(0f, 0f);
 
         SlideOutGrillButtons();
         CuttingBoardSetupOff();
@@ -90,7 +105,7 @@ public class UIManager : MonoBehaviour
     private void Update()
     {
         cuttingAmount = (int)cuttingAmountSlider.value;
-        cuttingAmountText.text = cuttingAmountSlider.value.ToString() + (" x");
+        cuttingAmountText.text = cuttingAmountSlider.value.ToString() + (" morceaux à couper");
     }
 
     public void SlideInCheeseButtons(RectTransform[] cheeseInterface, Vector2[] cheeseInterfaceTargetPos)
@@ -199,8 +214,6 @@ public class UIManager : MonoBehaviour
             MouseClickCut.Instance.isCutting = false;
             isCuttingGameStarted = false;
 
-            CuttingBoardSetupOn();
-
             int targetLayer = LayerMask.NameToLayer("CuttedPartLayer");
 
             foreach (GameObject go in GameObject.FindObjectsOfType<GameObject>())
@@ -218,8 +231,13 @@ public class UIManager : MonoBehaviour
                 });
             }
 
-            Debug.Log("Mini Jeu terminé");
-            //Envoie le score total des boutons appuyés
+            cuttingGameEndText.rectTransform.DOScale(1f, 0.2f).SetEase(Ease.OutExpo).OnComplete(() =>
+            {
+                cuttingGameEndText.rectTransform.DOScale(0f, 0.2f).SetEase(Ease.OutExpo).SetDelay(3f).OnComplete(() =>
+                {
+                    CuttingBoardSetupOn();
+                });
+            });
         }
     }
 
@@ -236,5 +254,48 @@ public class UIManager : MonoBehaviour
                 btn.gameObject.SetActive(false);
             });
         }
+    }
+
+    public void OpenEndingScreen()
+    {
+        for (int i = 0; i < endingInterface.Length; i++)
+        {
+            RectTransform btn = endingInterface[i];
+            btn.gameObject.SetActive(true);
+            btn.DOScale(1f, 0.3f).SetEase(Ease.InOutBack).SetDelay(0.1f);
+        }
+    }
+    public void CloseEndingScreen()
+    {
+        for (int i = 0; i < endingInterface.Length; i++)
+        {
+            RectTransform btn = endingInterface[i];
+            btn.DOScale(0f, 0.3f).SetEase(Ease.InOutBack).SetDelay(0.1f).OnComplete(() => {
+                btn.gameObject.SetActive(false);
+            });
+        }
+    }
+
+    public void OpenMenuScreen()
+    {
+        menuBackground.gameObject.SetActive(false);
+        menuBackground.DOFade(1f, 0.15f).OnComplete(() => {
+        });
+
+        for (int i = 0; i < menuInterface.Length; i++)
+        {
+            RectTransform btn = menuInterface[i];
+            btn.gameObject.SetActive(true);
+            btn.DOScale(1f, 0.3f).SetEase(Ease.InOutBack).SetDelay(0.1f).OnComplete(() => {
+            });
+        }
+    }
+
+    public void GlobalUIReset()
+    {
+        SlideOutCheeseButtons();
+        SlideOutGrillButtons();
+        CuttingBoardSetupOff();
+        CloseEndingScreen();
     }
 }

@@ -131,9 +131,22 @@ public class Grill : MonoBehaviour, IInteractable
 
             DOTween.To(() => grillCurrentScore, x => grillCurrentScore = x, currentMaximumScore, cookingTime).SetId("secondGrillScoreIncrease"); ;
 
+
+            Sequence seq2 = DOTween.Sequence();
+
+            seq2.Append((instantiatedGrillPrefab.transform.DOMoveY(19f, 0.4f)).SetEase(Ease.OutBack).SetDelay(0.2f))
+                .Join(instantiatedGrillPrefab.transform.DORotate(new Vector3(180, 0, 0), 0.4f).SetEase(Ease.InOutBack).SetDelay(0.5f))
+                .Join(instantiatedGrillPrefab.transform.DOMoveY(grillPrefabPos.position.y + 0.1f, 0.2f).SetEase(Ease.OutExpo).SetDelay(0.5f))
+                .Join(instantiatedGrillPrefab.transform.DOPunchScale(new Vector3(1f, 1f, 1f), 0.2f, 100, 0.1f).SetDelay(0.1f))
+                .OnComplete(() =>
+                {
+                    UIManager.Instance.SlideOutGrillButtons();
+                    FeedbackManager.Instance.MoveCameraToInitialPosition();
+                    UIManager.Instance.grillInterface[1].gameObject.SetActive(false);
+                    UIManager.Instance.grillInterface[2].gameObject.SetActive(true);
+                }).SetDelay(0.3f);
+
             //ajouter un délai léger ici, pour que les boutons se désactivent hors champ
-            UIManager.Instance.grillInterface[1].gameObject.SetActive(false);
-            UIManager.Instance.grillInterface[2].gameObject.SetActive(true);
 
             //Quand le score max est atteint, lance un chrono de perfectScoreSavingTime. Quand celui-ci est complet, lance CheeseBurning();
         }

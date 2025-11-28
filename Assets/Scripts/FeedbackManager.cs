@@ -16,6 +16,7 @@ public class FeedbackManager : MonoBehaviour
     public Transform grillCamPos;
     public Transform plateCamSpot;
     public Transform cuttingBoardCamPos;
+    public Transform finalCamPos;
 
     public float cameraShakeForce;
     public float cameraShakeDuration;
@@ -39,6 +40,12 @@ public class FeedbackManager : MonoBehaviour
         Sequence seq = DOTween.Sequence();
         seq.Append(mainCamera.transform.DOMove(mainCameraPos.position, 0.5f))
             .Join(mainCamera.transform.DORotate(mainCameraPos.eulerAngles, 0.5f));
+    }
+    public void MoveCameraToFinalPosition()
+    {
+        Sequence seq = DOTween.Sequence();
+        seq.Append(mainCamera.transform.DOMove(finalCamPos.position, 0.5f))
+            .Join(mainCamera.transform.DORotate(finalCamPos.eulerAngles, 0.5f));
     }
 
     public void MoveCameraToPoelon(Transform poelonCamPos)

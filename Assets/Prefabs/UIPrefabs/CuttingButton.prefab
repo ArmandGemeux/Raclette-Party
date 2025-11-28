@@ -60,7 +60,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CuttingButton
   scoreOnClick: 0
-  maximumScore: 50
+  maximumScore: 75
   clickWindowDuration: 1.2
   perfectScoreSaving: 0.15
   jaugeImage: {fileID: 8909110481372044353}

@@ -9,9 +9,11 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [Header("Game Parameters")]
-    public float remainingTime;
+    public float gameDuration;
+    private float remainingTime;
     public bool gameStarted;
     public TextMeshProUGUI remainingTimeText;
+    public TextMeshProUGUI finalScoreText;
 
     public Vector3[] plateSpots;
 
@@ -21,7 +23,7 @@ public class GameManager : MonoBehaviour
     public GameObject grillPrefab;
 
     [Header("FoodMakers")]
-    public Poelon poelon;
+    public Poelon[] poelons;
     public Grill grill;
 
     [Header("Raycast")]
@@ -48,18 +50,19 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        remainingTime = gameDuration;
         plateSpots = new Vector3[plateSpots.Length];
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) // clic gauche
+        if (Input.GetMouseButtonDown(0) && gameStarted) // clic gauche
         {
             CastRay();
         }
 
-        if (gameStarted)
+        if (gameStarted && remainingTime > 0)
         {
             remainingTime -= Time.deltaTime;
             int minutes = Mathf.FloorToInt(remainingTime / 60);
@@ -67,9 +70,13 @@ public class GameManager : MonoBehaviour
             remainingTimeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
         }
 
-        if (remainingTime <= 0)
+        if (remainingTime <= 0 && gameStarted)
         {
             GameEnding();
+            remainingTime = 0f;
+            int minutes = Mathf.FloorToInt(remainingTime / 60);
+            int seconds = Mathf.FloorToInt(remainingTime % 60);
+            remainingTimeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
         }
         //UIManager.Instance.currentPlateScore.text = spotsScore.ToString();
     }
@@ -120,6 +127,9 @@ public class GameManager : MonoBehaviour
     public void GameEnding()
     {
         gameStarted = false;
+        finalScoreText.text = ("Bravo ! C'est une délicieuse raclette. Ton score est de : " + totalScore);
+        UIManager.Instance.OpenEndingScreen();
+        FeedbackManager.Instance.MoveCameraToFinalPosition();
     }
 
     public void StartGame()
@@ -130,6 +140,16 @@ public class GameManager : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void RestartGame()
+    {
+        gameStarted = true;
+        totalScore = 0;
+        remainingTime = gameDuration;
+
+        UIManager.Instance.GlobalUIReset();
+        FeedbackManager.Instance.MoveCameraToInitialPosition();
     }
 }
 
